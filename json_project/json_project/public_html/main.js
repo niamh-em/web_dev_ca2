@@ -204,7 +204,12 @@ let json = {
 }
 
 function displayTable() {
-
+    
+    let headerString = `<h1>Goal 12: Responsible Consumption and Production </h1> <br>
+                        <h3>Ensure sustainable consumption and production patterns.</h3>`
+    
+    document.getElementById("header").innerHTML = headerString
+    
     let htmlString = `<table>
                         <tr>
                             <th>ID</th>
@@ -214,7 +219,9 @@ function displayTable() {
 
     json.goal.targets.forEach(target =>
     {
-        htmlString += `<tr onclick="openModal(${target.id})">`,
+        htmlString += `<tr onclick="openModal(${target.id},${target.number},'${target.description}', 
+                                            '${target.examples[0].title}', '${target.examples[0].description}', '${target.examples[0].images}',
+                                             '${target.examples[1].title}', '${target.examples[1].description}', '${target.examples[1].images}')">`,
                 //keys.forEach(key => htmlString += `<td>${car[key]}</td>`),
                 htmlString += `<td>${target.id}</td>`,
                 htmlString += `<td>${target.number}</td>`,
@@ -225,17 +232,28 @@ function displayTable() {
 
     htmlString += `</table>`
 
-    console.log(htmlString)
-
     document.getElementById("table").innerHTML = htmlString
 
-    console.log(htmlString)
 }
 
-function openModal(id) {
+function openModal(id, number, description, example_title1, example_description1, example_image1, example_title2, example_description2, example_image2) {
     document.getElementById("modal").style.display = "block"
-
-    let htmlString = `${id} test test test test test`
+    
+    // the images are showing up for all except the 1st row 
+    // but in the console.log the links for the images are showing up properly
+    console.log("image 1", example_image1)
+    console.log("image 2", example_image2)
+    
+    let htmlString = `ID: ${id} <br> 
+                    Number: ${number} <br>
+                    Description: ${description} <br>
+                    Example: <br>
+                    Title: ${example_title1} <br>
+                    Description: ${example_description1} <br>
+                    Image: <br> <img src = ${example_image1}> <br>
+                    Title: ${example_title2} <br>
+                    Description: ${example_description2} <br>
+                    Image: <br> <img src = ${example_image2}>`
 
     document.getElementById("modal").innerHTML = htmlString
 }
