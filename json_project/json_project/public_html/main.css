@@ -7,3 +7,6 @@ Click nbfs://nbhost/SystemFileSystem/Templates/ClientSide/css.css to edit this t
     Author     : niamh maddy
 */
 
+#modal {
+    display: none;
+}
