@@ -205,17 +205,20 @@ let json = {
 
 function displayTable() {
 
-    let keys = Object.keys(json.goal.targets[0])
-    console.log("keys", keys)
-
-    let htmlString = `<table><tr>`
-    keys.forEach(key => htmlString += `<th>${key}</th>`)
-    htmlString += `</tr>`
+    let htmlString = `<table>
+                        <tr>
+                            <th>ID</th>
+                            <th>Number</th>
+                            <th>Description</th>
+                        </tr>`
 
     json.goal.targets.forEach(target =>
     {
-        htmlString += `<tr>`,
-                keys.forEach(key => htmlString += `<td>${target[key]}</td>`),
+        htmlString += `<tr onclick="openModal(${target.id})">`,
+                //keys.forEach(key => htmlString += `<td>${car[key]}</td>`),
+                htmlString += `<td>${target.id}</td>`,
+                htmlString += `<td>${target.number}</td>`,
+                htmlString += `<td>${target.description}</td>`,
                 htmlString += `</tr>`
     }
     )
@@ -228,3 +231,12 @@ function displayTable() {
 
     console.log(htmlString)
 }
+
+function openModal(id) {
+    document.getElementById("modal").style.display = "block"
+
+    let htmlString = `${id} test test test test test`
+
+    document.getElementById("modal").innerHTML = htmlString
+}
+
