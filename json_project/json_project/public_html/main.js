@@ -224,7 +224,7 @@ function displayTable() {
     document.getElementById("header").innerHTML = headerString
 
     // arrow changes whether ascending is true or not 
-    let arrow = sortAscendingOrder === true ? "↑" : "↓"
+    let arrow = sortAscendingOrder === true ? " ↑" : " ↓"
 
     let htmlString = `<table>
                         <thead>
@@ -283,7 +283,6 @@ function openModal(id, number, description, example_title1, example_description1
                     Description: '${example_description2}' <br>
                     Image: <br> <img src = '${example_image2}'></p>`
 
-    console.log(htmlString)
 
     document.getElementById("modal-content").innerHTML = htmlString
 }
@@ -295,23 +294,20 @@ function closeModal() {
 // intial sort code taken from derek.comp: https://derek.comp.dkit.ie/
 function sort(key)
 { 
-    console.log("function sort is run")
     if (lastSortColumnName === key){
         // if the last clicked coloumn is the same as the key, it sorts in the reverse
-        sortAssendingOrder = !sortAssendingOrder
+        sortAscendingOrder = !sortAscendingOrder
     } 
     else {
         lastSortColumnName = key
-        sortAssendingOrder = true
+        sortAscendingOrder = true
     }
 
-    if (sortAssendingOrder){
+    if (sortAscendingOrder){
         json.goal.targets.sort((a, b) => a[key] < b[key] ? -1 : 1)
-        console.log("tries to sort ascending for ", key)
     } 
     else {
         json.goal.targets.sort((a, b) => a[key] < b[key] ? 1 : -1)
-        console.log("Tries to sort descending for ",key)
     }
     displayTable()
 }
