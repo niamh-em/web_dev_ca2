@@ -214,7 +214,15 @@ let sortAscendingOrder = true
 // initially set the last sorted column to be id
 let lastSortColumnName = "id"
 
+// getting a unique id for adding data 
+let uniqueId = json.goal.targets.length+1
+
 function displayTable() {
+    // resetting to be visible again
+    document.getElementById("header").style.display = "block"
+    document.getElementById("table").style.display = "block"
+    document.getElementById("addButton").style.display = "block"
+    
     // dynamically making the header
     let headerString = `<h1>Goal ${json.goal.number}: ${json.goal.title} </h1> <br>
                         <h3>${json.goal.description}</h3>
@@ -310,4 +318,32 @@ function sort(key)
         json.goal.targets.sort((a, b) => a[key] < b[key] ? 1 : -1)
     }
     displayTable()
+}
+
+function showAddModal(){
+    document.getElementById("header").style.display = "none"
+    document.getElementById("table").style.display = "none"
+    document.getElementById("addButton").style.display = "none"
+    document.getElementById("addModal").showModal()
+}
+
+function hideAddModal(){
+    document.getElementById("addModal").close()
+    displayTable()
+}
+
+// adding code initially taken from derek.comp: https://derek.comp.dkit.ie/
+function addData(){
+    let number = document.getElementById("number").value
+    let description = document.getElementById("description").value
+
+    let emptyExample = {title: "", description: "", images: [""], tags: []}
+    
+    // examples has to be an array with 2 arrays in it, so putting emptyExample in examples twice makes this an array of 2 empty arrays
+    let newData = {id: uniqueId, number: number, description: description, examples: [emptyExample, emptyExample]}
+    
+    json.goal.targets.push(newData)
+    
+    uniqueId++
+    hideAddModal()
 }
