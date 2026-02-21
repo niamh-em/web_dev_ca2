@@ -252,16 +252,16 @@ function displayTable() {
     // getting the content for the body of the table 
     json.goal.targets.forEach(target =>
     {
-        htmlString += `<tr onclick="openModal(${target.id},${target.number},'${target.description}', 
-                                            '${target.examples[0].title}', '${target.examples[0].description}', '${target.examples[0].images[0]}',
-                                             '${target.examples[1].title}', '${target.examples[1].description}', '${target.examples[1].images[0]}')">`,
+        htmlString += `<tr>`,
                 keys.forEach(key => {
                     // we don't want to show examples in the table because if we do they are undefined at this point (plus we show them later in the modal)
                     if (key !== "examples") {
-                        htmlString += `<td>${target[key]}</td>`
+                        htmlString += `<td onclick="openModal(${target.id},${target.number},'${target.description}', 
+                                            '${target.examples[0].title}', '${target.examples[0].description}', '${target.examples[0].images[0]}',
+                                             '${target.examples[1].title}', '${target.examples[1].description}', '${target.examples[1].images[0]}')">${target[key]}</td>`
                     }
                 }),
-                htmlString += `</tr>`
+                htmlString += `<td><input type="button" value="Modify"/></td><td><input type="button" value="Delete"/></td></tr>`
     }
     )
 
