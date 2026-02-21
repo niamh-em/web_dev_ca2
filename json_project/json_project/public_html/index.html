@@ -19,5 +19,20 @@ Click nbfs://nbhost/SystemFileSystem/Templates/Other/html.html to edit this temp
             <div id="modal-content"></div>
             <input type="button" value="Close" onclick="closeModal()"/>
         </dialog>
+        
+        <br>
+        <input id="addButton" type="button" value="Add Data to Table" onclick="showAddModal()"/> 
+
+        <!-- adding code initially taken from derek.comp: https://derek.comp.dkit.ie/ -->
+        <dialog id="addModal">
+            <div id = "addForm">
+                <label>Number: </label><input type="number" id="number" placeholder="Number"><br>
+                <label>Description: </label><input type="text" id="description" placeholder="Description"><br>
+                <br>
+                <input type="button" value="Cancel" onclick="hideAddModal()"/>
+                <input type="button" value="Add Data to Table" onclick="addData()"/>
+            </div>
+        </dialog>
+        
     </body>
 </html>
