@@ -203,34 +203,61 @@ let json = {
     }
 }
 
-function displayTable() {
-    
-    let headerString = `<h1>Goal 12: Responsible Consumption and Production </h1> <br>
-                        <h3>Ensure sustainable consumption and production patterns.</h3>`
-    
-    document.getElementById("header").innerHTML = headerString
-    
-    let htmlString = `<table>
-                        <tr>
-                            <th>ID</th>
-                            <th>Number</th>
-                            <th>Description</th>
-                        </tr>`
+////////////////////////////////////////////////////////////////////////////////////
 
+// getting the keys 
+let keys = Object.keys(json.goal.targets[0]) // array of 4 
+
+// initially set the sort to ascending order
+let sortAscendingOrder = true
+
+// initially set the last sorted column to be id
+let lastSortColumnName = "id"
+
+function displayTable() {
+    // dynamically making the header
+    let headerString = `<h1>Goal ${json.goal.number}: ${json.goal.title} </h1> <br>
+                        <h3>${json.goal.description}</h3>
+                        <p>Official Link: <a href="${json.goal.links.official}" target="blank">${json.goal.links.official}</a></p>
+                        <p>UNDP Link: <a href="${json.goal.links.undp}" target="blank">${json.goal.links.undp}</a></p>`
+
+    document.getElementById("header").innerHTML = headerString
+
+    // arrow changes whether ascending is true or not 
+    let arrow = sortAscendingOrder === true ? "↑" : "↓"
+
+    let htmlString = `<table>
+                        <thead>
+                            <tr>`
+
+    // getting the table headers from the keys 
+    keys.forEach(key => {
+        // we don't want to show examples in the table because if we do they are undefined at this point (plus we show them later in the modal)
+        if (key !== "examples") {
+            htmlString += `<th onclick=sort("${key}")>${key}${lastSortColumnName === key ? arrow : ""}</th>`
+        }
+    })
+
+    htmlString += `</tr>
+                        </thead><tbody>`
+
+    // getting the content for the body of the table 
     json.goal.targets.forEach(target =>
     {
         htmlString += `<tr onclick="openModal(${target.id},${target.number},'${target.description}', 
                                             '${target.examples[0].title}', '${target.examples[0].description}', '${target.examples[0].images[0]}',
                                              '${target.examples[1].title}', '${target.examples[1].description}', '${target.examples[1].images[0]}')">`,
-                //keys.forEach(key => htmlString += `<td>${car[key]}</td>`),
-                htmlString += `<td>${target.id}</td>`,
-                htmlString += `<td>${target.number}</td>`,
-                htmlString += `<td>${target.description}</td>`,
+                keys.forEach(key => {
+                    // we don't want to show examples in the table because if we do they are undefined at this point (plus we show them later in the modal)
+                    if (key !== "examples") {
+                        htmlString += `<td>${target[key]}</td>`
+                    }
+                }),
                 htmlString += `</tr>`
     }
     )
 
-    htmlString += `</table>`
+    htmlString += `</tbody></table>`
 
     document.getElementById("table").innerHTML = htmlString
 
@@ -242,9 +269,9 @@ function openModal(id, number, description, example_title1, example_description1
     // but in the console.log the links for the images are showing up properly
     //console.log("image 1", example_image1)
     //console.log("image 2", example_image2)
-    
+
     document.getElementById("modal").showModal()
-    
+
     let htmlString = `<p>ID: ${id} <br> 
                     Number: ${number} <br>
                     Description: '${description}' <br>
@@ -255,12 +282,36 @@ function openModal(id, number, description, example_title1, example_description1
                     Title: '${example_title2}' <br>
                     Description: '${example_description2}' <br>
                     Image: <br> <img src = '${example_image2}'></p>`
-    
+
     console.log(htmlString)
 
     document.getElementById("modal-content").innerHTML = htmlString
 }
- 
-function closeModal(){
+
+function closeModal() {
     document.getElementById('modal').close()
-} 
+}
+
+// intial sort code taken from derek.comp: https://derek.comp.dkit.ie/
+function sort(key)
+{ 
+    console.log("function sort is run")
+    if (lastSortColumnName === key){
+        // if the last clicked coloumn is the same as the key, it sorts in the reverse
+        sortAssendingOrder = !sortAssendingOrder
+    } 
+    else {
+        lastSortColumnName = key
+        sortAssendingOrder = true
+    }
+
+    if (sortAssendingOrder){
+        json.goal.targets.sort((a, b) => a[key] < b[key] ? -1 : 1)
+        console.log("tries to sort ascending for ", key)
+    } 
+    else {
+        json.goal.targets.sort((a, b) => a[key] < b[key] ? 1 : -1)
+        console.log("Tries to sort descending for ",key)
+    }
+    displayTable()
+}
