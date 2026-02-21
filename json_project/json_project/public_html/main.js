@@ -220,8 +220,8 @@ function displayTable() {
     json.goal.targets.forEach(target =>
     {
         htmlString += `<tr onclick="openModal(${target.id},${target.number},'${target.description}', 
-                                            '${target.examples[0].title}', '${target.examples[0].description}', '${target.examples[0].images}',
-                                             '${target.examples[1].title}', '${target.examples[1].description}', '${target.examples[1].images}')">`,
+                                            '${target.examples[0].title}', '${target.examples[0].description}', '${target.examples[0].images[0]}',
+                                             '${target.examples[1].title}', '${target.examples[1].description}', '${target.examples[1].images[0]}')">`,
                 //keys.forEach(key => htmlString += `<td>${car[key]}</td>`),
                 htmlString += `<td>${target.id}</td>`,
                 htmlString += `<td>${target.number}</td>`,
@@ -236,25 +236,31 @@ function displayTable() {
 
 }
 
+// initial code for modal taken from derek.comp: https://derek.comp.dkit.ie/
 function openModal(id, number, description, example_title1, example_description1, example_image1, example_title2, example_description2, example_image2) {
-    document.getElementById("modal").style.display = "block"
-    
     // the images are showing up for all except the 1st row 
     // but in the console.log the links for the images are showing up properly
-    console.log("image 1", example_image1)
-    console.log("image 2", example_image2)
+    //console.log("image 1", example_image1)
+    //console.log("image 2", example_image2)
     
-    let htmlString = `ID: ${id} <br> 
+    document.getElementById("modal").showModal()
+    
+    let htmlString = `<p>ID: ${id} <br> 
                     Number: ${number} <br>
-                    Description: ${description} <br>
+                    Description: '${description}' <br>
                     Example: <br>
-                    Title: ${example_title1} <br>
-                    Description: ${example_description1} <br>
-                    Image: <br> <img src = ${example_image1}> <br>
-                    Title: ${example_title2} <br>
-                    Description: ${example_description2} <br>
-                    Image: <br> <img src = ${example_image2}>`
+                    Title: '${example_title1}' <br>
+                    Description: '${example_description1}' <br>
+                    Image: <br> <img src = '${example_image1}'> <br>
+                    Title: '${example_title2}' <br>
+                    Description: '${example_description2}' <br>
+                    Image: <br> <img src = '${example_image2}'></p>`
+    
+    console.log(htmlString)
 
-    document.getElementById("modal").innerHTML = htmlString
+    document.getElementById("modal-content").innerHTML = htmlString
 }
-
+ 
+function closeModal(){
+    document.getElementById('modal').close()
+} 
