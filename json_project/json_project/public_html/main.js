@@ -118,11 +118,6 @@ function displayTable() {
 
 // initial code for modal taken from derek.comp: https://derek.comp.dkit.ie/
 function openModal(givenId) {
-    // the images are showing up for all except the 1st row 
-    // but in the console.log the links for the images are showing up properly
-    //console.log("image 1", example_image1)
-    //console.log("image 2", example_image2)
-
     document.getElementById("modal").showModal()
 
     // used .find() because that filters through the array and returns the first value to pass the test
