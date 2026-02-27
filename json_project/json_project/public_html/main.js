@@ -48,11 +48,9 @@ function displayTable() {
             rand1 = Math.floor(Math.random()*2)
             if (Math.random() < 0.5) {
                 example.favourite = "Yes"
-                console.log("fav = yes")
             }
             else {
                 example.favourite = "No"
-                console.log("fav = no")
             }
             
             // for the rating property
