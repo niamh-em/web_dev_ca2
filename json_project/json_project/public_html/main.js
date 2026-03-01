@@ -91,8 +91,8 @@ function displayTable() {
             htmlString += `<th onclick=sort("${key}")>${key}${lastSortColumnName === key ? arrow : ""}</th>`
             }
             })
-
-            htmlString += `</tr>
+            
+            htmlString += `<th></th><th></th></tr>
                         </thead><tbody>`
 
             // getting the content for the body of the table 
@@ -158,9 +158,9 @@ function sort(key)
     }
 
     if (sortAscendingOrder) {
-        json.goal.targets.toLowerCase().sort((a, b) => a[key] < b[key] ? -1 : 1)
+        json.goal.targets.sort((a, b) => a[key] < b[key] ? -1 : 1)
     } else {
-        json.goal.targets.toLowerCasesort((a, b) => a[key] < b[key] ? 1 : -1)
+        json.goal.targets.sort((a, b) => a[key] < b[key] ? 1 : -1)
     }
     displayTable()
 }
