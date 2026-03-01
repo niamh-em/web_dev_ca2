@@ -118,6 +118,7 @@ function displayTable() {
 
 // initial code for modal taken from derek.comp: https://derek.comp.dkit.ie/
 function openModal(givenId) {
+
     document.getElementById("modal").showModal()
 
     // used .find() because that filters through the array and returns the first value to pass the test
@@ -157,39 +158,76 @@ function sort(key)
     }
 
     if (sortAscendingOrder) {
-        json.goal.targets.sort((a, b) => a[key] < b[key] ? -1 : 1)
+        json.goal.targets.toLowerCase().sort((a, b) => a[key] < b[key] ? -1 : 1)
     } else {
-        json.goal.targets.sort((a, b) => a[key] < b[key] ? 1 : -1)
+        json.goal.targets.toLowerCasesort((a, b) => a[key] < b[key] ? 1 : -1)
     }
     displayTable()
 }
 
-function showAddModal() {
-    document.getElementById("header").style.display = "none"
-    document.getElementById("table").style.display = "none"
+function showAddForm() {
+    // hiding the buttons
     document.getElementById("addButton").style.display = "none"
-    document.getElementById("addModal").showModal()
+    
+    // creating the form
+    htmlString = `<h4>Add Data</h4>
+                <label>ID: ${uniqueId}</label><br>
+                <label>Number: </label><input type="number" id="number" placeholder="Number"><br>
+                <label>Description: </label><input type="text" id="description" placeholder="Description"><br>
+                <br><label>Example 1:</label><br>
+                <label>Title: </label><input type="text" id="example1Title" placeholder="Title"><br>
+                <label>Description</label><input type="text" id="example1Description" placeholder="Description"><br>
+                <label>Image </label><input type="text" id="example1Image" placeholder="image link" oninput="showImage1()"><br>
+                <div id="showExample1Image"></div><br>
+                <br><label>Example 2:</label><br>
+                <label>Title: </label><input type="text" id="example2Title" placeholder="Title"><br>
+                <label>Description</label><input type="text" id="example2Description" placeholder="Description"><br>
+                <label>Image </label><input type="text" id="example2Image" placeholder="image link" oninput="showImage2()"><br>
+                <div id="showExample2Image"></div><br>`
+    
+    htmlString += `<br>
+                <input type="button" value="Cancel" onclick="displayTable()"/>
+                <input type="button" value="Add Data to Table" onclick="addData()"/>`
+    
+    // replacing the table with the add form
+    document.getElementById("table").innerHTML = htmlString
 }
 
-function hideAddModal() {
-    document.getElementById("addModal").close()
-    displayTable()
+// oninput idea gotten from w3Schools: https://www.w3schools.com/jsref/tryit.asp?filename=tryjsref_oninput 
+function showImage1(){
+    let image1 = document.getElementById("example1Image").value
+    document.getElementById("showExample1Image").innerHTML = `<img src=${image1} alt="user's image 1">`
+}
+
+function showImage2(){
+    let image2 = document.getElementById("example2Image").value
+    document.getElementById("showExample2Image").innerHTML = `<img src=${image2} alt="user's image 2">`
 }
 
 // adding code initially taken from derek.comp: https://derek.comp.dkit.ie/
 function addData() {
     let number = document.getElementById("number").value
     let description = document.getElementById("description").value
-    let title1 = document.getElementById("title1").value
-
-
-    let emptyExample = {title: "", description: "", images: [""], tags: []}
-
-    // examples has to be an array with 2 arrays in it, so putting emptyExample in examples twice makes this an array of 2 empty arrays
-    let newData = {id: uniqueId, number: number, description: description, examples: [emptyExample, emptyExample]}
-
+    
+    // example 1 
+    let title1 = document.getElementById("example1Title").value
+    let description1 =  document.getElementById("example1Description").value
+    let image1 =  document.getElementById("example1Image").value
+    
+    // example 2 
+    let title2 = document.getElementById("example2Title").value
+    let description2 =  document.getElementById("example2Description").value
+    let image2 =  document.getElementById("example2Image").value
+    
+    // making examples to add to the newData which will be added to the json
+    let example1Array = {title: title1, description: description1, images:[image1], tags: []}
+    let example2Array = {title: title2, description: description2, images:[image2], tags: []}
+    
+    // making the array to add to json
+    let newData = {id: uniqueId, number: number, description: description, examples: [example1Array, example2Array]}
+    
     json.goal.targets.push(newData)
-
+    
     uniqueId++
-    hideAddModal()
+    displayTable()
 }
