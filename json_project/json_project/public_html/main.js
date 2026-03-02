@@ -105,7 +105,7 @@ function displayTable() {
                     htmlString += `<td onclick="openModal(${target.id})">${target[key]}</td>`
                     }
                     }),
-                    htmlString += `<td><input type="button" value="Modify"/></td><td><input type="button" value="Delete"/></td></tr>`
+                    htmlString += `<td><input type="button" value="Modify" onclick="showModifyForm(${target.id})"/></td><td><input type="button" value="Delete" onclick="deleteModal(${target.id})"/></td></tr>`
             }
             )
 
@@ -135,9 +135,12 @@ function openModal(givenId) {
         example.images.forEach(image => {
             htmlString += `<img src=${image}><br>`
         })
-        htmlString += `Favourite: ${example.favourite}<br>
+        htmlString += `Tags: ${example.tags} <br>
+                        Favourite: ${example.favourite}<br>
                         Rating: ${example.rating}<br>`
     })
+    
+    htmlString += `<input type="button" value="Close" onclick="closeModal()"/>`
 
     document.getElementById("modal-content").innerHTML = htmlString
 }
@@ -166,7 +169,8 @@ function sort(key)
 }
 
 function showAddForm() {
-    // hiding the buttons
+    // hiding the header and buttons
+    document.getElementById("header").style.display = "none"
     document.getElementById("addButton").style.display = "none"
     
     // creating the form
@@ -230,4 +234,100 @@ function addData() {
     
     uniqueId++
     displayTable()
+}
+
+function showModifyForm(givenId) {
+    // hiding the header and buttons
+    document.getElementById("header").style.display = "none"
+    document.getElementById("addButton").style.display = "none"
+    
+    //showModifyImage1()
+    //showModifyImage2()
+    
+    let exampleDisplay = json.goal.targets.find(target => target.id === givenId)
+    
+    // creating the for Modify Form
+    htmlString = `<h4>Modify Data</h4>
+                <label>ID: ${givenId}</label><br>
+                <label>Number: </label><input type="number" id="number" value=${exampleDisplay.number}><br>
+                <label>Description: </label><input type="text" id="description" value=${exampleDisplay.description}><br>
+                <br><label>Example 1:</label><br>
+                <label>Title: </label><input type="text" id="example1Title" value=${exampleDisplay.examples[0].title}><br>
+                <label>Description</label><input type="text" id="example1Description" value=${exampleDisplay.examples[0].title}><br>
+                <label>Image </label><input type="text" id="example1Image" value=${exampleDisplay.examples[0].images[0]} oninput="showModifyImage1(${givenId})"><br>
+                <div id="showExample1Image"></div><br>
+                <br><label>Example 2:</label><br>
+                <label>Title: </label><input type="text" id="example2Title" value=${exampleDisplay.examples[1].title}><br>
+                <label>Description</label><input type="text" id="example2Description" value=${exampleDisplay.examples[1].description}><br>
+                <label>Image </label><input type="text" id="example2Image" value=${exampleDisplay.examples[1].images[0]} oninput="showModifyImage2(${givenId})"><br>
+                <div id="showExample2Image"></div><br>
+                <br>
+                <input type="button" value="Cancel" onclick="displayTable()"/>
+                <input type="button" value="Modify Data" onclick="modifyData(${givenId}, 
+                                                document.getElementById('number').value, 
+                                                document.getElementById('description').value, 
+                                                document.getElementById('example1Title').value,
+                                                document.getElementById('example1Description').value,
+                                                document.getElementById('example1Image').value,
+                                                document.getElementById('example2Title').value,
+                                                document.getElementById('example2Description').value,
+                                                document.getElementById('example2Image').value)"/>`
+    
+    // replacing the table with the add form
+    document.getElementById("table").innerHTML = htmlString
+}
+
+function modifyData(id, number, description, example1Title, example1Description, example1Image, example2Title, example2Description, example2Image){
+    console.log("id: ",id)
+    console.log("number", number)
+    console.log("description: ", description)
+    console.log("example 1  title: ", example1Title)
+    console.log("example 1 description: ", example1Description)
+    console.log("example 1 image: ", example1Image)
+    console.log("example 2  title: ", example2Title)
+    console.log("example 2 description: ", example2Description)
+    console.log("example 2 image: ", example2Image)
+    
+    json.goal.targets.forEach(target => {
+        if (target.id === id){
+            target.number = number 
+            target.description = description 
+            target.examples[0].title = example1Title
+            target.examples[0].description = example1Description
+            target.examples[0].images[0] = example1Image
+            target.examples[1].title = example1Title
+            target.examples[1].description = example1Description
+            target.examples[1].images[0] = example1Image
+        }
+    })
+    
+    displayTable()
+}
+
+function deleteModal(id){
+    document.getElementById("deleteModal").showModal()
+    let htmlString = `<h3>Delete</h3><br>
+                        <p>Are you sure you want to delete ${id}?</p><br>
+                        <input type="button" value="Cancel" onclick="closeDeleteModal()"/>
+                        <input type="button" value="Yes, Delete" onclick="deleteData(${id})"/>`
+    document.getElementById("delete-content").innerHTML = htmlString
+}
+
+function deleteData(id){
+    let selectedIndex
+    json.goal.targets.forEach((target, index) => 
+    {
+        if(target.id === id)
+        {
+            selectedIndex = index
+        }
+    })
+
+    json.goal.targets.splice(selectedIndex, 1)
+    document.getElementById('deleteModal').close()
+    displayTable()
+}
+
+function closeDeleteModal(){
+    document.getElementById('deleteModal').close()
 }
