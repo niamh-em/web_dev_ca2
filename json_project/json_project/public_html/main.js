@@ -37,6 +37,7 @@ function displayTable() {
     document.getElementById("header").style.display = "block"
     document.getElementById("table").style.display = "block"
     document.getElementById("addButton").style.display = "block"
+    document.getElementById("tagsButton").style.display = "block"
 
     // dynamically making the header
     let headerString = `<h1>Goal ${json.goal.number}: ${json.goal.title} </h1> <br>
