@@ -172,6 +172,7 @@ function showAddForm() {
     // hiding the header and buttons
     document.getElementById("header").style.display = "none"
     document.getElementById("addButton").style.display = "none"
+    document.getElementById("tagsButton").style.display = "none"
     
     // creating the form
     htmlString = `<h4>Add Data</h4>
@@ -187,7 +188,7 @@ function showAddForm() {
                 <label>Title: </label><input type="text" id="example2Title" placeholder="Title"><br>
                 <label>Description</label><input type="text" id="example2Description" placeholder="Description"><br>
                 <label>Image </label><input type="text" id="example2Image" placeholder="image link" oninput="showImage2()"><br>
-                <div id="showExample2Image"></div><br>`
+                <div id="showExample2Image" ></div><br>`
     
     htmlString += `<br>
                 <input type="button" value="Cancel" onclick="displayTable()"/>
@@ -240,27 +241,25 @@ function showModifyForm(givenId) {
     // hiding the header and buttons
     document.getElementById("header").style.display = "none"
     document.getElementById("addButton").style.display = "none"
-    
-    //showModifyImage1()
-    //showModifyImage2()
+    document.getElementById("tagsButton").style.display = "none"
     
     let exampleDisplay = json.goal.targets.find(target => target.id === givenId)
     
     // creating the for Modify Form
     htmlString = `<h4>Modify Data</h4>
                 <label>ID: ${givenId}</label><br>
-                <label>Number: </label><input type="number" id="number" value=${exampleDisplay.number}><br>
-                <label>Description: </label><input type="text" id="description" value=${exampleDisplay.description}><br>
+                <label>Number: </label><input type="number" id="number" value="${exampleDisplay.number}"><br>
+                <label>Description: </label><input type="text" id="description" value="${exampleDisplay.description}"><br>
                 <br><label>Example 1:</label><br>
-                <label>Title: </label><input type="text" id="example1Title" value=${exampleDisplay.examples[0].title}><br>
-                <label>Description</label><input type="text" id="example1Description" value=${exampleDisplay.examples[0].title}><br>
-                <label>Image </label><input type="text" id="example1Image" value=${exampleDisplay.examples[0].images[0]} oninput="showModifyImage1(${givenId})"><br>
-                <div id="showExample1Image"></div><br>
+                <label>Title: </label><input type="text" id="example1Title" value="${exampleDisplay.examples[0].title}"><br>
+                <label>Description</label><input type="text" id="example1Description" value="${exampleDisplay.examples[0].description}"><br>
+                <label>Image </label><input type="text" id="example1Image" value="${exampleDisplay.examples[0].images[0]}" oninput="showImage1()"><br>
+                <div id="showExample1Image"><img src="${exampleDisplay.examples[0].images[0]}"/></div><br>
                 <br><label>Example 2:</label><br>
-                <label>Title: </label><input type="text" id="example2Title" value=${exampleDisplay.examples[1].title}><br>
-                <label>Description</label><input type="text" id="example2Description" value=${exampleDisplay.examples[1].description}><br>
-                <label>Image </label><input type="text" id="example2Image" value=${exampleDisplay.examples[1].images[0]} oninput="showModifyImage2(${givenId})"><br>
-                <div id="showExample2Image"></div><br>
+                <label>Title: </label><input type="text" id="example2Title" value="${exampleDisplay.examples[1].title}"><br>
+                <label>Description</label><input type="text" id="example2Description" value="${exampleDisplay.examples[1].description}"><br>
+                <label>Image </label><input type="text" id="example2Image" value="${exampleDisplay.examples[1].images[0]}" oninput="showImage2()"><br>
+                <div id="showExample2Image"><img src="${exampleDisplay.examples[1].images[0]}"/></div><br>
                 <br>
                 <input type="button" value="Cancel" onclick="displayTable()"/>
                 <input type="button" value="Modify Data" onclick="modifyData(${givenId}, 
@@ -295,9 +294,9 @@ function modifyData(id, number, description, example1Title, example1Description,
             target.examples[0].title = example1Title
             target.examples[0].description = example1Description
             target.examples[0].images[0] = example1Image
-            target.examples[1].title = example1Title
-            target.examples[1].description = example1Description
-            target.examples[1].images[0] = example1Image
+            target.examples[1].title = example2Title
+            target.examples[1].description = example2Description
+            target.examples[1].images[0] = example2Image
         }
     })
     
