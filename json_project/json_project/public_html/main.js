@@ -2,8 +2,20 @@
 let keys
 let uniqueId
 let json = {}
+// initially set the sort to ascending order
+let sortAscendingOrder = true
+// initially set the last sorted column to be id
+let lastSortColumnName = "id"
 let rand1
 let rand2
+let titleText
+let descriptionText
+let inputText
+let imgText
+let modifyTitles = []
+let modifyDescriptions = []
+let modifyImages = []
+
 
 function loadJSONData() {
     let url = `./json/un_goals.json`
@@ -19,12 +31,6 @@ function loadJSONData() {
                 displayTable()
             })
 }
-
-// initially set the sort to ascending order
-let sortAscendingOrder = true
-
-// initially set the last sorted column to be id
-let lastSortColumnName = "id"
 
 function displayTable() {
     // resetting to be visible again
@@ -45,76 +51,57 @@ function displayTable() {
         target.examples.forEach(example => {
             // for the favourite property
             // assigns either 0 or 1
-            rand1 = Math.floor(Math.random()*2)
+            rand1 = Math.floor(Math.random() * 2)
             if (Math.random() < 0.5) {
                 example.favourite = "Yes"
-            }
-            else {
+            } else {
                 example.favourite = "No"
             }
-            
+
             // for the rating property
             rand2 = Math.floor(Math.random() * 6)
-            if (rand2 === 0){
-                example.rating = rand2
-            }
-            else if (rand2 === 1){
-                example.rating = rand2
-            }
-            else if (rand2 === 2){
-                example.rating = rand2
-            }
-            else if (rand2 === 3){
-                example.rating = rand2
-            }
-            else if (rand2 === 4){
-                example.rating = rand2
-            }
-            else if (rand2 === 5){
-                example.rating = rand2
-            }
-            else {
-                example.rating = rand2
-            }
-    })})
-            // arrow changes whether ascending is true or not 
-            let arrow = sortAscendingOrder === true ? " ↑" : " ↓"
+            example.rating = rand2
+            
+        })
+    })
+    // arrow changes whether ascending is true or not 
+    let arrow = sortAscendingOrder === true ? " ↑" : " ↓"
 
-            let htmlString = `<table>
+    let htmlString = `<table>
                         <thead>
                             <tr>`
 
-            // getting the table headers from the keys 
-            keys.forEach(key => {
-            // we don't want to show examples in the table because if we do they are undefined at this point (plus we show them later in the modal)
-            if (key !== "examples") {
+    // getting the table headers from the keys 
+    keys.forEach(key => {
+        // we don't want to show examples in the table because if we do they are undefined at this point (plus we show them later in the modal)
+        if (key !== "examples") {
             htmlString += `<th onclick=sort("${key}")>${key}${lastSortColumnName === key ? arrow : ""}</th>`
-            }
-            })
-            
-            htmlString += `<th></th><th></th></tr>
+        }
+    })
+
+    htmlString += `<th></th><th></th></tr>
                         </thead><tbody>`
 
-            // getting the content for the body of the table 
-            json.goal.targets.forEach(target =>
-            {
-            htmlString += `<tr>`,
-                    keys.forEach(key => {
+    // getting the content for the body of the table 
+    json.goal.targets.forEach(target =>
+    {
+        htmlString += `<tr>`,
+                keys.forEach(key => {
                     // we don't want to show examples in the table because if we do they are undefined at this point (plus we show them later in the modal)
                     if (key !== "examples") {
-                    htmlString += `<td onclick="openModal(${target.id})">${target[key]}</td>`
+                        htmlString += `<td onclick="openModal(${target.id})">${target[key]}</td>`
                     }
-                    }),
-                    htmlString += `<td><input type="button" value="Modify" onclick="showModifyForm(${target.id})"/></td><td><input type="button" value="Delete" onclick="deleteModal(${target.id})"/></td></tr>`
-            }
-            )
+                }),
+                htmlString += `<td><input type="button" value="Modify" onclick="showModifyForm(${target.id})"/></td><td><input type="button" value="Delete" onclick="deleteModal(${target.id})"/></td></tr>`
+    }
+    )
 
-            htmlString += `</tbody></table>`
+    htmlString += `</tbody></table>`
 
-            document.getElementById("table").innerHTML = htmlString
+    document.getElementById("table").innerHTML = htmlString
 
-            }
-            
+}
+
 
 // initial code for modal taken from derek.comp: https://derek.comp.dkit.ie/
 function openModal(givenId) {
@@ -139,7 +126,7 @@ function openModal(givenId) {
                         Favourite: ${example.favourite}<br>
                         Rating: ${example.rating}<br>`
     })
-    
+
     htmlString += `<input type="button" value="Close" onclick="closeModal()"/>`
 
     document.getElementById("modal-content").innerHTML = htmlString
@@ -173,7 +160,7 @@ function showAddForm() {
     document.getElementById("header").style.display = "none"
     document.getElementById("addButton").style.display = "none"
     document.getElementById("tagsButton").style.display = "none"
-    
+
     // creating the form
     htmlString = `<h4>Add Data</h4>
                 <label>ID: ${uniqueId}</label><br>
@@ -189,52 +176,58 @@ function showAddForm() {
                 <label>Description</label><input type="text" id="example2Description" placeholder="Description"><br>
                 <label>Image </label><input type="text" id="example2Image" placeholder="image link" oninput="showImage2()"><br>
                 <div id="showExample2Image" ></div><br>`
-    
+
     htmlString += `<br>
                 <input type="button" value="Cancel" onclick="displayTable()"/>
                 <input type="button" value="Add Data to Table" onclick="addData()"/>`
-    
+
     // replacing the table with the add form
     document.getElementById("table").innerHTML = htmlString
-}
-
-// oninput idea gotten from w3Schools: https://www.w3schools.com/jsref/tryit.asp?filename=tryjsref_oninput 
-function showImage1(){
-    let image1 = document.getElementById("example1Image").value
-    document.getElementById("showExample1Image").innerHTML = `<img src=${image1} alt="user's image 1">`
-}
-
-function showImage2(){
-    let image2 = document.getElementById("example2Image").value
-    document.getElementById("showExample2Image").innerHTML = `<img src=${image2} alt="user's image 2">`
 }
 
 // adding code initially taken from derek.comp: https://derek.comp.dkit.ie/
 function addData() {
     let number = document.getElementById("number").value
     let description = document.getElementById("description").value
-    
+
     // example 1 
     let title1 = document.getElementById("example1Title").value
-    let description1 =  document.getElementById("example1Description").value
-    let image1 =  document.getElementById("example1Image").value
-    
+    let description1 = document.getElementById("example1Description").value
+    let image1 = document.getElementById("example1Image").value
+
     // example 2 
     let title2 = document.getElementById("example2Title").value
-    let description2 =  document.getElementById("example2Description").value
-    let image2 =  document.getElementById("example2Image").value
-    
+    let description2 = document.getElementById("example2Description").value
+    let image2 = document.getElementById("example2Image").value
+
     // making examples to add to the newData which will be added to the json
-    let example1Array = {title: title1, description: description1, images:[image1], tags: []}
-    let example2Array = {title: title2, description: description2, images:[image2], tags: []}
-    
+    let example1Array = {title: title1, description: description1, images: [image1], tags: []}
+    let example2Array = {title: title2, description: description2, images: [image2], tags: []}
+
     // making the array to add to json
     let newData = {id: uniqueId, number: number, description: description, examples: [example1Array, example2Array]}
-    
+
     json.goal.targets.push(newData)
-    
+
     uniqueId++
     displayTable()
+}
+
+// oninput idea gotten from w3Schools: https://www.w3schools.com/jsref/tryit.asp?filename=tryjsref_oninput 
+function showImage1() {
+    let image1 = document.getElementById("example1Image").value
+    document.getElementById("showExample1Image").innerHTML = `<img src=${image1} alt="user's image 1">`
+}
+
+function showImage2() {
+    let image2 = document.getElementById("example2Image").value
+    document.getElementById("showExample2Image").innerHTML = `<img src=${image2} alt="user's image 2">`
+}
+
+function showModifyImage(imgText, inputText) {
+    let modifyImage = document.getElementById(inputText).value
+    // the .src replaces the src of the image 
+    document.getElementById(imgText).src = modifyImage
 }
 
 function showModifyForm(givenId) {
@@ -242,68 +235,110 @@ function showModifyForm(givenId) {
     document.getElementById("header").style.display = "none"
     document.getElementById("addButton").style.display = "none"
     document.getElementById("tagsButton").style.display = "none"
-    
+
     let exampleDisplay = json.goal.targets.find(target => target.id === givenId)
-    
+
     // creating the for Modify Form
     htmlString = `<h4>Modify Data</h4>
                 <label>ID: ${givenId}</label><br>
                 <label>Number: </label><input type="number" id="number" value="${exampleDisplay.number}"><br>
-                <label>Description: </label><input type="text" id="description" value="${exampleDisplay.description}"><br>
-                <br><label>Example 1:</label><br>
-                <label>Title: </label><input type="text" id="example1Title" value="${exampleDisplay.examples[0].title}"><br>
-                <label>Description</label><input type="text" id="example1Description" value="${exampleDisplay.examples[0].description}"><br>
-                <label>Image </label><input type="text" id="example1Image" value="${exampleDisplay.examples[0].images[0]}" oninput="showImage1()"><br>
-                <div id="showExample1Image"><img src="${exampleDisplay.examples[0].images[0]}"/></div><br>
-                <br><label>Example 2:</label><br>
-                <label>Title: </label><input type="text" id="example2Title" value="${exampleDisplay.examples[1].title}"><br>
-                <label>Description</label><input type="text" id="example2Description" value="${exampleDisplay.examples[1].description}"><br>
-                <label>Image </label><input type="text" id="example2Image" value="${exampleDisplay.examples[1].images[0]}" oninput="showImage2()"><br>
-                <div id="showExample2Image"><img src="${exampleDisplay.examples[1].images[0]}"/></div><br>
-                <br>
+                <label>Description: </label><input type="text" id="description" value="${exampleDisplay.description}"><br>`
+
+    for (let i = 0; i < exampleDisplay.examples.length; i++) {
+        titleText = "example" + i + "Title"
+        descriptionText = "example" + i + "Description"
+        htmlString += `<br><br><label>Example ${i + 1}</label><br>
+                       <label>Title: </label><input type="text" id="${titleText}" value="${exampleDisplay.examples[i].title}"><br>
+                       <label>Description: </label><input type="text" id="${descriptionText}" value="${exampleDisplay.examples[i].description}">`
+        for (let j = 0; j < exampleDisplay.examples[i].images.length; j++) {
+            imgText = "example" + i + "Image" + j
+            inputText = "example" + i + "Input" + j
+            htmlString += `<br><label>Image ${j + 1}: </label>
+                           <input type="text" id="${inputText}" value="${exampleDisplay.examples[i].images[j]}" oninput="showModifyImage('${imgText}', '${inputText}')">
+                           <br><img id="${imgText}" src="${exampleDisplay.examples[i].images[j]}"/>`
+        }
+    }
+
+    htmlString += `<br>
                 <input type="button" value="Cancel" onclick="displayTable()"/>
-                <input type="button" value="Modify Data" onclick="modifyData(${givenId}, 
-                                                document.getElementById('number').value, 
-                                                document.getElementById('description').value, 
-                                                document.getElementById('example1Title').value,
-                                                document.getElementById('example1Description').value,
-                                                document.getElementById('example1Image').value,
-                                                document.getElementById('example2Title').value,
-                                                document.getElementById('example2Description').value,
-                                                document.getElementById('example2Image').value)"/>`
-    
+                <input type="button" value="Modify Data" onclick="modifyData(${givenId})"/>`
+
     // replacing the table with the add form
     document.getElementById("table").innerHTML = htmlString
 }
 
-function modifyData(id, number, description, example1Title, example1Description, example1Image, example2Title, example2Description, example2Image){
-    console.log("id: ",id)
-    console.log("number", number)
-    console.log("description: ", description)
-    console.log("example 1  title: ", example1Title)
-    console.log("example 1 description: ", example1Description)
-    console.log("example 1 image: ", example1Image)
-    console.log("example 2  title: ", example2Title)
-    console.log("example 2 description: ", example2Description)
-    console.log("example 2 image: ", example2Image)
+function modifyData(givenId) {
+    // clearing the arrays each time data is modified
+    modifyTitles = []
+    modifyDescriptions = []
+    modifyImages = []
     
+    let number = document.getElementById("number").value
+    let description = document.getElementById("description").value
+
+    let exampleDisplay = json.goal.targets.find(target => target.id === givenId)
+    // counter to make sure no image in the array of images gets overwritten  
+    let counter = 0
+
+    for (let i = 0; i < exampleDisplay.examples.length; i++) {
+        titleText = "example" + i + "Title"
+        descriptionText = "example" + i + "Description"
+        modifyTitles[i] = document.getElementById(titleText).value
+        modifyDescriptions[i] = document.getElementById(descriptionText).value
+        for (let j = 0; j < exampleDisplay.examples[i].images.length; j++) {
+            imgText = "example" + i + "Image" + j
+            inputText = "example" + i + "Input" + j
+            modifyImages[counter] = document.getElementById(inputText).value
+            counter++
+        }
+    }
+
     json.goal.targets.forEach(target => {
-        if (target.id === id){
-            target.number = number 
-            target.description = description 
-            target.examples[0].title = example1Title
-            target.examples[0].description = example1Description
-            target.examples[0].images[0] = example1Image
-            target.examples[1].title = example2Title
-            target.examples[1].description = example2Description
-            target.examples[1].images[0] = example2Image
+        if (target.id === givenId) {
+            target.number = number
+            target.description = description
+            // go through the array modifyTitle and change the title at the example index to the modifyTitle at the same index
+            for (let i = 0; i < modifyTitles.length; i++) {
+                target.examples[i].title = modifyTitles[i]
+            }
+            // go through the array modifyDescription and change the description at the example index to the modifyDescription at the same index
+            for (let i = 0; i < modifyDescriptions.length; i++) {
+                target.examples[i].description = modifyDescriptions[i]
+            }
+            
+            // setting counters for the example and image array indexes 
+            let exampleIndex = 0
+            let imageIndex = 0
+            // doesn't really matter whcih example we use 
+            // if the example.images is 2 then we add 2 images per example
+            if (target.examples[0].images.length === 2) {
+                for (let i = 0; i < modifyImages.length; i++) {
+                    // checking if the number is even and not 0 
+                    if (i % 2 === 0 && i !== 0) {
+                        // if it's not 0 and even then its 2, 4, 6, etc 
+                        // each example images array only has 2 images so after changing 2 images we want to move on to the next example
+                        // increasing the exampleIndex to move on to the next example array 
+                        // resetting the imageIndex back to 0 so when we start modifying the new example array we start from the beginnning of the image array 
+                        exampleIndex++
+                        imageIndex = 0
+                    }
+                    target.examples[exampleIndex].images[imageIndex] = modifyImages[i]
+                    imageIndex++
+                }
+            }
+            else {
+                for (let i = 0; i < modifyImages.length; i++){
+                    target.examples[exampleIndex].images[imageIndex] = modifyImages[i]
+                    exampleIndex++
+                }
+            }
         }
     })
-    
+
     displayTable()
 }
 
-function deleteModal(id){
+function deleteModal(id) {
     document.getElementById("deleteModal").showModal()
     let htmlString = `<h3>Delete</h3><br>
                         <p>Are you sure you want to delete ${id}?</p><br>
@@ -312,11 +347,11 @@ function deleteModal(id){
     document.getElementById("delete-content").innerHTML = htmlString
 }
 
-function deleteData(id){
+function deleteData(id) {
     let selectedIndex
-    json.goal.targets.forEach((target, index) => 
+    json.goal.targets.forEach((target, index) =>
     {
-        if(target.id === id)
+        if (target.id === id)
         {
             selectedIndex = index
         }
@@ -327,6 +362,6 @@ function deleteData(id){
     displayTable()
 }
 
-function closeDeleteModal(){
+function closeDeleteModal() {
     document.getElementById('deleteModal').close()
 }
