@@ -87,7 +87,7 @@ function displayTable() {
     keys.forEach(key => {
         // we don't want to show examples in the table because if we do they are undefined at this point (plus we show them later in the modal)
         if (key !== "examples") {
-            htmlString += `<th onclick=sort("${key}")>${key}${lastSortColumnName === key ? arrow : ""}</th>`
+            htmlString += `<th onclick=pickingSort("${key}")>${key}${lastSortColumnName === key ? arrow : ""}</th>`
         }
     })
 
@@ -147,8 +147,17 @@ function closeModal() {
     document.getElementById('modal').close()
 }
 
+function pickingSort(key){
+    if (key.localeCompare("id") === 0){
+        numSort(key)
+    }
+    else {
+        stringSort(key)
+    }
+}
+
 // intial sort code taken from derek.comp: https://derek.comp.dkit.ie/
-function sort(key)
+function numSort(key)
 {
     if (lastSortColumnName === key) {
         // if the last clicked coloumn is the same as the key, it sorts in the reverse
@@ -162,6 +171,33 @@ function sort(key)
         json.goal.targets.sort((a, b) => a[key] < b[key] ? -1 : 1)
     } else {
         json.goal.targets.sort((a, b) => a[key] < b[key] ? 1 : -1)
+    }
+    displayTable()
+}
+
+function stringSort(key) {
+    if (lastSortColumnName === key) {
+        // if the last clicked coloumn is the same as the key, it sorts in the reverse
+        sortAscendingOrder = !sortAscendingOrder
+    } 
+    else {
+        lastSortColumnName = key
+        sortAscendingOrder = true
+    }
+
+    if (sortAscendingOrder) {
+        json.goal.targets.sort((a,b) => {
+            let x = a[key].toLowerCase()
+            let y = b[key].toLowerCase()
+            return x.localeCompare(y)
+        })
+    } 
+    else {
+        json.goal.targets.sort((a,b) => {
+            let x = a[key].toLowerCase()
+            let y = b[key].toLowerCase()
+            return y.localeCompare(x)
+        })
     }
     displayTable()
 }
