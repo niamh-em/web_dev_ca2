@@ -4,6 +4,7 @@ let uniqueId
 let json = {}
 // initially set the sort to ascending order
 let sortAscendingOrder = true
+let tagsSortAscendingOrder = true
 // initially set the last sorted column to be id
 let lastSortColumnName = "id"
 let rand1
@@ -15,7 +16,7 @@ let imgText
 let modifyTitles = []
 let modifyDescriptions = []
 let modifyImages = []
-
+let tags = []
 
 function loadJSONData() {
     let url = `./json/un_goals.json`
@@ -36,8 +37,18 @@ function displayTable() {
     // resetting to be visible again
     document.getElementById("header").style.display = "block"
     document.getElementById("table").style.display = "block"
-    document.getElementById("addButton").style.display = "block"
-    document.getElementById("tagsButton").style.display = "block"
+    document.getElementById("menu").style.display = "block"
+    
+    // making an array of all the tags 
+    json.goal.targets.forEach(target => {
+        target.examples.forEach(example => {
+            // using forEach and not map because if we used map it would rewrite the array everytime
+            example.tags.forEach(tag => tags.push(tag))
+        })
+    })
+
+    // making an array of unique tags only 
+    uniqueTags = [...new Set(tags)]
 
     // dynamically making the header
     let headerString = `<h1>Goal ${json.goal.number}: ${json.goal.title} </h1> <br>
@@ -62,7 +73,7 @@ function displayTable() {
             // for the rating property
             rand2 = Math.floor(Math.random() * 6)
             example.rating = rand2
-            
+
         })
     })
     // arrow changes whether ascending is true or not 
@@ -100,7 +111,6 @@ function displayTable() {
     htmlString += `</tbody></table>`
 
     document.getElementById("table").innerHTML = htmlString
-
 }
 
 
@@ -159,8 +169,7 @@ function sort(key)
 function showAddForm() {
     // hiding the header and buttons
     document.getElementById("header").style.display = "none"
-    document.getElementById("addButton").style.display = "none"
-    document.getElementById("tagsButton").style.display = "none"
+    document.getElementById("menu").style.display = "none"
 
     // creating the form
     htmlString = `<h4>Add Data</h4>
@@ -234,8 +243,7 @@ function showModifyImage(imgText, inputText) {
 function showModifyForm(givenId) {
     // hiding the header and buttons
     document.getElementById("header").style.display = "none"
-    document.getElementById("addButton").style.display = "none"
-    document.getElementById("tagsButton").style.display = "none"
+    document.getElementById("menu").style.display = "none"
 
     let exampleDisplay = json.goal.targets.find(target => target.id === givenId)
 
@@ -273,51 +281,78 @@ function modifyData(givenId) {
     modifyTitles = []
     modifyDescriptions = []
     modifyImages = []
-    
+
+    // getting the number and description values
     let number = document.getElementById("number").value
     let description = document.getElementById("description").value
 
+    // establishing exampleDisplay
     let exampleDisplay = json.goal.targets.find(target => target.id === givenId)
+
     // counter to make sure no image in the array of images gets overwritten  
     let counter = 0
 
+    // getting data for each example in the chosen target 
     for (let i = 0; i < exampleDisplay.examples.length; i++) {
+
+        // creating data ids for the arrays
         titleText = "example" + i + "Title"
         descriptionText = "example" + i + "Description"
+
+        // making the arrays and pushing data into them 
         modifyTitles[i] = document.getElementById(titleText).value
         modifyDescriptions[i] = document.getElementById(descriptionText).value
+
+        // adding all the images to one array 
         for (let j = 0; j < exampleDisplay.examples[i].images.length; j++) {
+
+            // creating ids for the images 
             imgText = "example" + i + "Image" + j
             inputText = "example" + i + "Input" + j
+            // adding the link to the image array 
             modifyImages[counter] = document.getElementById(inputText).value
             counter++
         }
     }
+    // i = the amount of examples 
+    // j = the amount of images 
+    // counter = index of images in image array 
+    // j != counter bc 
+    // once the j loop finishes and goes back for another i loop, j resets and would overwrite an image
 
+    // actually modifiying the data
     json.goal.targets.forEach(target => {
         if (target.id === givenId) {
+
+            // modifying number and description 
             target.number = number
             target.description = description
+
             // go through the array modifyTitle and change the title at the example index to the modifyTitle at the same index
+            // so title 1 (index 0) for example 1 (index 0) 
             for (let i = 0; i < modifyTitles.length; i++) {
                 target.examples[i].title = modifyTitles[i]
             }
+
             // go through the array modifyDescription and change the description at the example index to the modifyDescription at the same index
+            // so description 1 (index 0) for example 1 (index 0) 
             for (let i = 0; i < modifyDescriptions.length; i++) {
                 target.examples[i].description = modifyDescriptions[i]
             }
-            
+
             // setting counters for the example and image array indexes 
             let exampleIndex = 0
             let imageIndex = 0
-            // doesn't really matter whcih example we use 
-            // if the example.images is 2 then we add 2 images per example
-            if (target.examples[0].images.length === 2) {
+
+            // doesn't really matter which example we use 
+            if (target.examples[0].images.length !== 1) {
+
+                // loop for length not being 1 
                 for (let i = 0; i < modifyImages.length; i++) {
-                    // checking if the number is even and not 0 
-                    if (i % 2 === 0 && i !== 0) {
-                        // if it's not 0 and even then its 2, 4, 6, etc 
-                        // each example images array only has 2 images so after changing 2 images we want to move on to the next example
+
+                    // checking if i is halfway through the length
+                    if ((modifyImages.length / 2) === i) {
+
                         // increasing the exampleIndex to move on to the next example array 
                         // resetting the imageIndex back to 0 so when we start modifying the new example array we start from the beginnning of the image array 
                         exampleIndex++
@@ -326,9 +361,9 @@ function modifyData(givenId) {
                     target.examples[exampleIndex].images[imageIndex] = modifyImages[i]
                     imageIndex++
                 }
-            }
-            else {
-                for (let i = 0; i < modifyImages.length; i++){
+            } else {
+                // loop if length is 1 
+                for (let i = 0; i < modifyImages.length; i++) {
                     target.examples[exampleIndex].images[imageIndex] = modifyImages[i]
                     exampleIndex++
                 }
@@ -364,5 +399,125 @@ function deleteData(id) {
 }
 
 function closeDeleteModal() {
+    document.getElementById('deleteModal').close()
+}
+
+function displayTagsManager() {
+    // resetting to be visible again
+    document.getElementById("header").style.display = "block"
+    document.getElementById("table").style.display = "block"
+    document.getElementById("menu").style.display = "block"
+
+    // dynamically making the header
+    let headerString = `<h1>Tags Manager </h1> <br>`
+    document.getElementById("header").innerHTML = headerString
+    
+    // arrow changes whether ascending is true or not 
+    let arrow = tagsSortAscendingOrder === true ? " ↑" : " ↓"
+
+    // making the list to show the tags
+    htmlString = `<table><thead><tr><th onclick="tagsSort()">Tags ${arrow}</th><th></th><th></th></tr></thead><tbody>`
+    uniqueTags.forEach(tag => {
+        htmlString += `<tr><td>${tag}</td><td><input type="button" value="Modify" onclick="showModifyTagsForm('${tag}')"/></td><td><input type="button" value="Delete" onclick="deleteTagsModal('${tag}')"/></td></tr>`
+    })
+
+    htmlString += `</tbody></table>`
+
+    document.getElementById("table").innerHTML = htmlString
+}
+
+function tagsSort() {
+    tagsSortAscendingOrder = !tagsSortAscendingOrder
+
+    if (tagsSortAscendingOrder) {
+        uniqueTags.sort((a,b) => {
+            // localeCompare() compares the 2 strings and returns -1, 0 or 1 depending on the order
+            // so if a is b4 b, then = -1
+            // if a = b, then = 0
+            // and if b is b4 a, then = 1
+            return a.toLowerCase().localeCompare(b.toLowerCase())
+        })
+    } 
+    else {
+        uniqueTags.sort((a,b) => {
+            return b.toLowerCase().localeCompare(a.toLowerCase())
+        })
+    }
+    displayTagsManager()
+}
+
+function showTagsAddForm() {
+    // hiding the header and buttons
+    document.getElementById("header").style.display = "none"
+    document.getElementById("menu").style.display = "none"
+
+    // creating the form
+    htmlString = `<h4>Add Tag</h4><br>
+                <label>Tag: </label><input type="text" id="newTag" placeholder="New Tag"><br>`
+
+    htmlString += `<br>
+                <input type="button" value="Cancel" onclick="displayTagsManager()"/>
+                <input type="button" value="Add Data to Table" onclick="addTagsData()"/>`
+
+    // replacing the table with the add form
+    document.getElementById("table").innerHTML = htmlString
+}
+
+// adding code initially taken from derek.comp: https://derek.comp.dkit.ie/
+function addTagsData() {
+    let newTag = document.getElementById("newTag").value
+    
+    uniqueTags.push(newTag)
+
+    displayTagsManager()
+}
+
+function showModifyTagsForm(chosenTag) {
+    // hiding the header and buttons
+    document.getElementById("header").style.display = "none"
+    document.getElementById("menu").style.display = "none"
+    
+    // getting the index of the chosenTag
+    // indexOf found on w3schools: https://www.w3schools.com/jsref/jsref_indexof_array.asp
+    let index = uniqueTags.indexOf(chosenTag);
+    
+    // creating the for Modify Form
+    htmlString = `<h4>Modify Tag</h4>
+                <label>Tag: </label><input type="text" id="modifiedTag" value="${chosenTag}"><br>
+                <br>
+                <input type="button" value="Cancel" onclick="displayTagsManager()"/>
+                <input type="button" value="Modify Data" onclick="modifyTagsData(${index})"/>`
+
+    // replacing the table with the add form
+    document.getElementById("table").innerHTML = htmlString
+}
+
+function modifyTagsData(index) {
+    // getting the modified tag value
+    let modifiedTag = document.getElementById("modifiedTag").value
+    // adding to the uniqueTags array 
+    uniqueTags[index] = modifiedTag
+    displayTagsManager()
+}
+
+function deleteTagsModal(chosenTag) {
+    document.getElementById("deleteModal").showModal()
+    let htmlString = `<h3>Delete</h3><br>
+                        <p>Are you sure you want to delete the tag ${chosenTag}?</p><br>
+                        <input type="button" value="Cancel" onclick="closeDeleteTagsModal()"/>
+                        <input type="button" value="Yes, Delete" onclick="deleteTagsData('${chosenTag}')"/>`
+    document.getElementById("delete-content").innerHTML = htmlString
+}
+
+function deleteTagsData(chosenTag) {
+    // getting index of chosen tag to delete
+    let index = uniqueTags.indexOf(chosenTag);
+    // deleting 1 item from the uniqueTags array at index index
+    uniqueTags.splice(index, 1)
+    document.getElementById('deleteModal').close()
+    displayTagsManager()
+}
+
+function closeDeleteTagsModal() {
     document.getElementById('deleteModal').close()
 }
