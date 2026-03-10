@@ -14,6 +14,22 @@ Click nbfs://nbhost/SystemFileSystem/Templates/Other/html.html to edit this temp
     </head>
     <body onload="loadJSONData()">
         <div id="header"></div>
+        <nav id="menu">
+            <details id="tableButtons">
+                <summary>
+                    Data Table 
+                </summary>
+                <input id="showTableButton" type="button" value="Show Table" onclick="displayTable()"/>
+                <input id="addButton" type="button" value="Add Data to Table" onclick="showAddForm()"/> 
+            </details>
+            <details id="tagsButtons">
+                <summary>
+                    Tags Manager
+                </summary>
+                <input id="tagsButton" type="button" value="Show Tags Manager" onclick="displayTagsManager()"/>
+                <input id="addTagsButton" type="button" value="Add Tags" onclick="showTagsAddForm()"/>
+            </details>
+        </nav>
         <div id="table"></div>
         <!-- initial code for modal taken from derek.comp: https://derek.comp.dkit.ie/ -->
         <dialog id = "modal" closedby="any">
@@ -22,8 +38,5 @@ Click nbfs://nbhost/SystemFileSystem/Templates/Other/html.html to edit this temp
         <dialog id="deleteModal" closedby="any">
             <div id="delete-content"></div>
         </dialog> 
-        <br>
-        <input id="addButton" type="button" value="Add Data to Table" onclick="showAddForm()"/> 
-        <input id="tagsButton" type="button" value="Tags Manager"/>
     </body>
 </html>
