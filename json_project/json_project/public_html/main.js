@@ -217,11 +217,13 @@ function showAddForm() {
                 <label>Description</label><input type="text" id="example1Description" placeholder="Description"><br>
                 <label>Image </label><input type="text" id="example1Image" placeholder="image link" oninput="showImage1()"><br>
                 <div id="showExample1Image"></div><br>
+                <label>Tags: </label><input type="text" id="example1Tag1" placeholder="Tag"><br>
                 <br><label>Example 2:</label><br>
                 <label>Title: </label><input type="text" id="example2Title" placeholder="Title"><br>
                 <label>Description</label><input type="text" id="example2Description" placeholder="Description"><br>
                 <label>Image </label><input type="text" id="example2Image" placeholder="image link" oninput="showImage2()"><br>
-                <div id="showExample2Image" ></div><br>`
+                <div id="showExample2Image" ></div><br>
+                <label>Tags: </label><input type="text" id="example2Tag1" placeholder="Tag"><br>`
 
     htmlString += `<br>
                 <input type="button" value="Cancel" onclick="displayTable()"/>
@@ -240,15 +242,17 @@ function addData() {
     let title1 = document.getElementById("example1Title").value
     let description1 = document.getElementById("example1Description").value
     let image1 = document.getElementById("example1Image").value
+    let tag1 = document.getElementById("example1Tag1").value
 
     // example 2 
     let title2 = document.getElementById("example2Title").value
     let description2 = document.getElementById("example2Description").value
     let image2 = document.getElementById("example2Image").value
+    let tag2 = document.getElementById("example2Tag1").value
 
     // making examples to add to the newData which will be added to the json
-    let example1Array = {title: title1, description: description1, images: [image1], tags: []}
-    let example2Array = {title: title2, description: description2, images: [image2], tags: []}
+    let example1Array = {title: title1, description: description1, images: [image1], tags: [tag1]}
+    let example2Array = {title: title2, description: description2, images: [image2], tags: [tag2]}
 
     // making the array to add to json
     let newData = {id: uniqueId, number: number, description: description, examples: [example1Array, example2Array]}
@@ -475,6 +479,8 @@ function tagsSort() {
         })
     } 
     else {
+        // leaving the number key as a string because i could not figure out/ find out how to sort doubles in javascript
+        // and it still works if it is a string
         uniqueTags.sort((a,b) => {
             return b.toLowerCase().localeCompare(a.toLowerCase())
         })
