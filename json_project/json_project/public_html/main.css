@@ -9,9 +9,431 @@ Click nbfs://nbhost/SystemFileSystem/Templates/ClientSide/css.css to edit this t
 
 /* actual required css (like this css makes stuff work)*/
 
+*{
+margin:0;
+padding:0;
+box-sizing:border-box;
+}
+
+body{
+font-family: Arial,sans-serif;
+background:#eef4ef;
+color:#333;
+padding-top:90px;
+min-height:100vh;
+}
+
+/* header stuff */
+#header{
+text-align:center;
+margin:30px auto;
+max-width:1000px;
+padding:25px;
+background:white;
+border-radius:10px;
+box-shadow:0 6px 18px rgba(0,0,0,0.08);
+border-top:6px solid #2e7d32;
+}
+
+#header h1{
+color:#1b5e20;
+margin-bottom:10px;
+}
+
+#header h3{
+font-weight:400;
+color:#555;
+margin-bottom:10px;
+}
+
+#header a{
+color:#2e7d32;
+text-decoration:none;
+font-weight:500;
+}
+
+#header a:hover{
+text-decoration:underline;
+}
+
+/* actual menu */
+
+#menu{
+position:fixed;
+top:0;
+left:0;
+width:100%;
+background:#1b5e20;
+display:flex;
+justify-content:center;
+gap:25px;
+align-items:center;
+padding:18px 20px;
+z-index:1000;
+box-shadow:0 4px 15px rgba(0,0,0,0.2);
+}
+
+#navBrand{
+display:flex;
+align-items:center;
+gap:10px;
+}
+
+#navTitle{
+color:white;
+font-size:18px;
+font-weight:600;
+letter-spacing:.5px;
+}
+
+/* details researched from here -- https://developer.mozilla.org/en-US/docs/Web/CSS/Reference/Selectors/::details-content */
+/* it adds dropdown details youre able to read */
+
+#menu details{
+position:relative;
+margin-top:10px;
+}
+
+/* summary researched from here -- https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Elements/summary */
+/* can you tell i had a fun time just scrolling through the mozilla site */
+
+#menu summary{
+list-style:none;
+cursor:pointer;
+color:white;
+font-weight:500;
+padding:8px 12px;
+border-radius:6px;
+background:#2e7d32;
+}
+
+#menu summary:hover{
+background:#256628;
+}
+
+/* menu details "open" state researched from here  -- https://css-tricks.com/almanac/pseudo-selectors/o/open/ */
+/* and also here: https://developer.mozilla.org/en-US/docs/Web/CSS/Reference/Selectors/:open */
+/* used for stuff that has open/closed states, such as the menu*/
+#menu details[open]{
+background:white;
+padding:12px;
+border-radius:8px;
+box-shadow:0 8px 20px rgba(0,0,0,0.15);
+}
+
+#menu details[open] summary{
+color:#1b5e20;
+background:#e8f5e9;
+margin-bottom:8px;
+}
+
+/* css forms researched from here -- https://www.w3schools.com/css/css_form.asp*/
+/* they just make html forms look nicer and less ugly */
+#menu input[type="button"]{
+width:100%;
+margin:6px 0;
+}
+
+input[type="button"]{
+padding:10px 14px;
+border:none;
+border-radius:6px;
+background:#2e7d32;
+color:white;
+font-weight:500;
+cursor:pointer;
+}
+
+input[type="button"]:hover{
+background:#1b5e20;
+}
+
+/* table stuff */
+#table{
+max-width:1100px;
+margin:auto;
+background:white;
+padding:25px;
+border-radius:10px;
+box-shadow:0 8px 20px rgba(0,0,0,0.08);
+border-left:6px solid #66bb6a;
+}
+
+table{
+width:100%;
+border-collapse:collapse;
+}
+
+thead{
+background:#2e7d32;
+color:white;
+}
+
+th{
+padding:12px;
+text-align:left;
+font-weight:600;
+}
+
+td{
+padding:12px;
+border-bottom:1px solid #eee;
+}
+
+tr:nth-child(even){
+background:#f6fbf7;
+}
+
+tr:hover{
+background:#edf7ef;
+}
+
+th:hover{
+background:#edf7ef;
+}
+
+dialog{
+border:none;
+border-radius:12px;
+padding:25px;
+max-width:500px;
+width:90%;
+box-shadow:0 20px 40px rgba(0,0,0,0.35);
+animation:dialogFade .25s ease;
+position:fixed;
+top:50%;
+left:50%;
+transform:translate(-50%,-50%);
+margin:0;
+}
+
+dialog[open]{
+display:block;
+}
+
+dialog::backdrop{
+background:rgba(0,0,0,0.35);
+backdrop-filter:blur(4px);
+}
+
+#modal-content img{
+display:block;
+max-width:160px;
+width:100%;
+margin:10px auto;
+border-radius:8px;
+border:3px solid #e6f2e8;
+box-shadow:0 3px 10px rgba(0,0,0,0.1);
+}
+
+img{
+max-width:160px;
+margin-top:8px;
+border-radius:6px;
+border:2px solid #e0e0e0;
+}
+
+/* modal styling */
+#modal-content p{
+margin-bottom:6px;
+}
+
+#modal-content strong{
+color:#1b5e20;
+}
+
+#modal-content{
+background:#f8fbf9;
+padding:15px;
+border-radius:8px;
+border-left:5px solid #2e7d32;
+}
+
+#modal-content .rating{
+margin-top:5px;
+font-weight:600;
+color:#2e7d32;
+}
+
+/* delete menu stuff */
+#delete-content{
+text-align:center;
+}
+
+#delete-content h3{
+color:#c62828;
+margin-bottom:10px;
+}
+
+#delete-content input{
+margin:6px;
+}
 
 
-/* non-required css (this css was mostly just to make my life easier when coding so you can delete/change all this)*/
-img {
-    width: 100px;
+/* small fade in when page loads */
+body{
+animation:fadeIn .6s ease;
+}
+
+/* simple fade animation */
+/* i think it looks nice lol */
+@keyframes fadeIn{
+from{opacity:0}
+to{opacity:1}
+}
+
+/* dialog animation */
+@keyframes dialogFade{
+from{
+opacity:0;
+transform:translate(-50%,-60%) scale(.95);
+}
+to{
+opacity:1;
+transform:translate(-50%,-50%) scale(1);
+}
+}
+
+/* slightly nicer buttons */
+/* just editing them to have like... smoother animations and stuff. */
+input[type="button"]{
+transition:background .2s ease, transform .1s ease, box-shadow .2s ease;
+box-shadow:0 3px 6px rgba(0,0,0,0.15);
+}
+
+input[type="button"]:hover{
+transform:translateY(-1px);
+box-shadow:0 5px 12px rgba(0,0,0,0.18);
+}
+
+/* nicer table hover feel */
+tr{
+transition:background .2s ease, transform .1s ease;
+}
+
+tr:hover{
+transform:scale(1.01);
+}
+
+/* header decorative underline */
+/* makes it look less bald */
+#header h1{
+position:relative;
+display:inline-block;
+padding-bottom:6px;
+}
+
+/* subtle table edge glow */
+#table{
+transition:box-shadow .25s ease;
+}
+
+#table:hover{
+box-shadow:0 10px 25px rgba(0,0,0,0.12);
+}
+
+/* images slightly nicer */
+img{
+transition:transform .2s ease, box-shadow .2s ease;
+}
+
+img:hover{
+transform:scale(1.05);
+box-shadow:0 6px 14px rgba(0,0,0,0.15);
+}
+
+/* navbar slight highlight line */
+#menu{
+border-bottom:3px solid #66bb6a;
+}
+
+/* nicer dropdown animation */
+#menu details[open]{
+animation:fadeIn .2s ease;
+}
+
+/* dialog content spacing */
+#modal-content{
+line-height:1.5;
+}
+
+/* rating highlight */
+#modal-content .rating{
+background:#e8f5e9;
+padding:4px 8px;
+border-radius:6px;
+display:inline-block;
+}
+
+/* @media for tablet devices */
+
+@media(max-width:900px){
+
+#menu{
+flex-wrap:wrap;
+gap:15px;
+padding:15px;
+}
+
+#menu::before{
+position:static;
+width:100%;
+text-align:center;
+margin-bottom:8px;
+}
+
+#table{
+padding:20px;
+}
+
+}
+
+/* @media for mobile devices */
+@media(max-width:650px){
+/* transforms the data table into cards for mobile */
+#menu{
+flex-direction:column;
+align-items:stretch;
+}
+
+#menu details{
+width:100%;
+}
+
+#menu summary{
+text-align:center;
+}
+
+#table{
+background:transparent;
+box-shadow:none;
+padding:10px;
+border:none;
+}
+
+table thead{
+display:none;
+}
+
+table tr{
+display:block;
+background:white;
+margin-bottom:15px;
+padding:15px;
+border-radius:10px;
+box-shadow:0 5px 12px rgba(0,0,0,0.08);
+border-left:5px solid #2e7d32;
+}
+
+table td{
+display:flex;
+justify-content:space-between;
+padding:6px 0;
+border:none;
+}
+
+table td input{
+margin-left:10px;
+}
+
 }
