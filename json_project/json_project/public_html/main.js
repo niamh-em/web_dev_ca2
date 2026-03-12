@@ -1,4 +1,4 @@
-// declarations 
+// declarations
 let keys
 let uniqueId
 let json = {}
@@ -25,9 +25,9 @@ function loadJSONData() {
             .then(jsonData => {
 
                 json = jsonData
-                // getting the keys 
-                keys = Object.keys(json.goal.targets[0]) // array of 4 
-                // getting a unique id for adding data 
+                // getting the keys
+                keys = Object.keys(json.goal.targets[0]) // array of 4
+                // getting a unique id for adding data
                 uniqueId = json.goal.targets.length + 1
                 displayTable()
             })
@@ -38,8 +38,8 @@ function displayTable() {
     document.getElementById("header").style.display = "block"
     document.getElementById("table").style.display = "block"
     document.getElementById("menu").style.display = "block"
-    
-    // making an array of all the tags 
+
+    // making an array of all the tags
     json.goal.targets.forEach(target => {
         target.examples.forEach(example => {
             // using forEach and not map because if we used map it would rewrite the array everytime
@@ -47,7 +47,7 @@ function displayTable() {
         })
     })
 
-    // making an array of unique tags only 
+    // making an array of unique tags only
     uniqueTags = [...new Set(tags)]
 
     // dynamically making the header
@@ -66,24 +66,24 @@ function displayTable() {
             rand1 = Math.floor(Math.random() * 2)
             if (Math.random() < 0.5) {
                 example.favourite = "Yes"
-            } else {
+            } 
+            else {
                 example.favourite = "No"
             }
 
             // for the rating property
             rand2 = Math.floor(Math.random() * 6)
             example.rating = rand2
-
         })
     })
-    // arrow changes whether ascending is true or not 
+    // arrow changes whether ascending is true or not
     let arrow = sortAscendingOrder === true ? " ↑" : " ↓"
 
     let htmlString = `<table>
                         <thead>
-                            <tr>`
+                            <tr id="headingRow">`
 
-    // getting the table headers from the keys 
+    // getting the table headers from the keys
     keys.forEach(key => {
         // we don't want to show examples in the table because if we do they are undefined at this point (plus we show them later in the modal)
         if (key !== "examples") {
@@ -94,9 +94,8 @@ function displayTable() {
     htmlString += `<th></th><th></th></tr>
                         </thead><tbody>`
 
-    // getting the content for the body of the table 
-    json.goal.targets.forEach(target =>
-    {
+    // getting the content for the body of the table
+    json.goal.targets.forEach(target => {
         htmlString += `<tr>`,
                 keys.forEach(key => {
                     // we don't want to show examples in the table because if we do they are undefined at this point (plus we show them later in the modal)
@@ -116,7 +115,7 @@ function displayTable() {
 
 // initial code for modal taken from derek.comp: https://derek.comp.dkit.ie/
 function openModal(givenId) {
-
+    // opening the modal
     document.getElementById("modal").showModal()
 
     // used .find() because that filters through the array and returns the first value to pass the test
@@ -147,10 +146,10 @@ function closeModal() {
     document.getElementById('modal').close()
 }
 
-function pickingSort(key){
-    if (key.localeCompare("id") === 0){
+function pickingSort(key) {
+    if (key.localeCompare("id") === 0) {
         numSort(key)
-    }
+    } 
     else {
         stringSort(key)
     }
@@ -162,14 +161,16 @@ function numSort(key)
     if (lastSortColumnName === key) {
         // if the last clicked coloumn is the same as the key, it sorts in the reverse
         sortAscendingOrder = !sortAscendingOrder
-    } else {
+    } 
+    else {
         lastSortColumnName = key
         sortAscendingOrder = true
     }
 
     if (sortAscendingOrder) {
         json.goal.targets.sort((a, b) => a[key] < b[key] ? -1 : 1)
-    } else {
+    } 
+    else {
         json.goal.targets.sort((a, b) => a[key] < b[key] ? 1 : -1)
     }
     displayTable()
@@ -186,14 +187,14 @@ function stringSort(key) {
     }
 
     if (sortAscendingOrder) {
-        json.goal.targets.sort((a,b) => {
+        json.goal.targets.sort((a, b) => {
             let x = a[key].toLowerCase()
             let y = b[key].toLowerCase()
             return x.localeCompare(y)
         })
     } 
     else {
-        json.goal.targets.sort((a,b) => {
+        json.goal.targets.sort((a, b) => {
             let x = a[key].toLowerCase()
             let y = b[key].toLowerCase()
             return y.localeCompare(x)
@@ -209,23 +210,37 @@ function showAddForm() {
 
     // creating the form
     htmlString = `<h4>Add Data</h4>
+                <form novalidate>
                 <label>ID: ${uniqueId}</label><br>
-                <label>Number: </label><input type="number" id="number" placeholder="Number"><br>
-                <label>Description: </label><input type="text" id="description" placeholder="Description"><br>
-                <br><label>Example 1:</label><br>
-                <label>Title: </label><input type="text" id="example1Title" placeholder="Title"><br>
-                <label>Description</label><input type="text" id="example1Description" placeholder="Description"><br>
-                <label>Image </label><input type="text" id="example1Image" placeholder="image link" oninput="showImage1()"><br>
-                <div id="showExample1Image"></div><br>
-                <br><label>Example 2:</label><br>
-                <label>Title: </label><input type="text" id="example2Title" placeholder="Title"><br>
-                <label>Description</label><input type="text" id="example2Description" placeholder="Description"><br>
-                <label>Image </label><input type="text" id="example2Image" placeholder="image link" oninput="showImage2()"><br>
-                <div id="showExample2Image" ></div><br>`
+                <label>Number: </label><input type="number" id="number" placeholder="Number">
+                <label class = "errorMessages" id = "numberErrorMessage"></label><br>
+                <label>Description: </label><input type="text" id="description" placeholder="Description">
+                <label class = "errorMessages" id = "descriptionErrorMessage"></label><br>
+                <br><b><label>Example 1:</label></b><br>
+                <label>Title: </label><input type="text" id="example1Title" placeholder="Title">
+                <label class = "errorMessages" id = "example1TitleErrorMessage"></label><br>
+                <label>Description</label><input type="text" id="example1Description" placeholder="Description">
+                <label class = "errorMessages" id="example1DescriptionErrorMessage"></label><br>
+                <label>Image </label><input type="text" id="example1Image" placeholder="Image Link" oninput="showImage1()">
+                <label class = "errorMessages" id="example1ImageErrorMessage"></label><br>
+                <div id="showExample1Image"></div>
+                <label>Tag: </label><input type="text" id="example1Tag" placeholder="Tag">
+                <label class="errorMessages" id="example1TagErrorMessage"></label><br>
+                <br><b><label>Example 2:</label></b><br>
+                <label>Title: </label><input type="text" id="example2Title" placeholder="Title">
+                <label class = "errorMessages" id = "example2TitleErrorMessage"></label><br>
+                <label>Description</label><input type="text" id="example2Description" placeholder="Description">
+                <label class = "errorMessages" id ="example2DescriptionErrorMessage"></label><br>
+                <label>Image </label><input type="text" id="example2Image" placeholder="Image Link" oninput="showImage2()">
+                <label class = "errorMessages" id="example2ImageErrorMessage"></label><br>
+                <div id="showExample2Image" ></div>
+                <label>Tag: </label><input type="text" id="example2Tag" placeholder="Tag">
+                <label class="errorMessages" id="example2TagErrorMessage"></label><br>`
 
     htmlString += `<br>
                 <input type="button" value="Cancel" onclick="displayTable()"/>
-                <input type="button" value="Add Data to Table" onclick="addData()"/>`
+                <input type="button" value="Add Data to Table" onclick="isFormValid()"/>
+                </form>`
 
     // replacing the table with the add form
     document.getElementById("table").innerHTML = htmlString
@@ -236,51 +251,15 @@ function addData() {
     let number = document.getElementById("number").value
     let description = document.getElementById("description").value
 
-    // example 1 
+    // example 1
     let title1 = document.getElementById("example1Title").value
     let description1 = document.getElementById("example1Description").value
     let image1 = document.getElementById("example1Image").value
 
-    // example 2 
+    // example 2
     let title2 = document.getElementById("example2Title").value
     let description2 = document.getElementById("example2Description").value
     let image2 = document.getElementById("example2Image").value
-    
-    // error checking --
-    if (number === "" || description === "") {
-        alert("Please enter a number and description")
-        return
-    }
-    // checks if its not a number
-    if (isNaN(number)) {
-        alert("Number must be a valid number")
-        return
-    }
-    // checks if its a blank field
-    if (title1 === "" || description1 === "") {
-        alert("Example 1 needs a title and description")
-        return
-    }
-    // checks if its a blank field (for desc 2)
-    if (title2 === "" || description2 === "") {
-        alert("Example 2 needs a title and description")
-        return
-    }
-    // checks if the link fields are empty
-    if (image1 === "" || image2 === "") {
-        alert("Please enter image links")
-        return
-    }
-    // checks if the link doesnt include http
-    if (!image1.includes("http")) {
-        alert("Image must be a valid link.")
-        return
-    }
-    // checks if the link doesnt include http (for image 2)
-    if (!image2.includes("http")) {
-        alert("Image must be a valid link.")
-        return
-    }
 
     // making examples to add to the newData which will be added to the json
     let example1Array = {title: title1, description: description1, images: [image1], tags: []}
@@ -295,7 +274,7 @@ function addData() {
     displayTable()
 }
 
-// oninput idea gotten from w3Schools: https://www.w3schools.com/jsref/tryit.asp?filename=tryjsref_oninput 
+// oninput idea gotten from w3Schools: https://www.w3schools.com/jsref/tryit.asp?filename=tryjsref_oninput
 function showImage1() {
     let image1 = document.getElementById("example1Image").value
     document.getElementById("showExample1Image").innerHTML = `<img src=${image1} alt="user's image 1">`
@@ -308,7 +287,7 @@ function showImage2() {
 
 function showModifyImage(imgText, inputText) {
     let modifyImage = document.getElementById(inputText).value
-    // the .src replaces the src of the image 
+    // the .src replaces the src of the image
     document.getElementById(imgText).src = modifyImage
 }
 
@@ -357,107 +336,85 @@ function modifyData(givenId) {
     // getting the number and description values
     let number = document.getElementById("number").value
     let description = document.getElementById("description").value
-    
-      // error checking for number and description
-    if(number === "" || description === ""){
-        alert("Number and description cannot be empty")
-        return
-    }
 
-    if(isNaN(number)){
-        alert("Number must be a valid number")
-        return
-    }
-
-        // establishing exampleDisplay
+    // establishing exampleDisplay
     let exampleDisplay = json.goal.targets.find(target => target.id === givenId)
 
-    // counter to make sure no image in the array of images gets overwritten  
+    // counter to make sure no image in the array of images gets overwritten
     let counter = 0
 
-    // getting data for each example in the chosen target 
+    // getting data for each example in the chosen target
     for (let i = 0; i < exampleDisplay.examples.length; i++) {
-
         // creating data ids for the arrays
         titleText = "example" + i + "Title"
         descriptionText = "example" + i + "Description"
 
-        // making the arrays and pushing data into them 
+        // making the arrays and pushing data into them
         modifyTitles[i] = document.getElementById(titleText).value
         modifyDescriptions[i] = document.getElementById(descriptionText).value
 
-        // adding all the images to one array 
+        // adding all the images to one array
         for (let j = 0; j < exampleDisplay.examples[i].images.length; j++) {
-
-            // creating ids for the images 
+            // creating ids for the images
             imgText = "example" + i + "Image" + j
             inputText = "example" + i + "Input" + j
-            
-            // error checking
-             if(imgText === "" || inputText === ""){
-            alert("Example titles and descriptions cannot be empty")
-            return
-            }
-            
-            if (!imgText.includes("http")) {
-                alert("Image links cannot be empty")
-                return
-            }
-            
-            // adding the link to the image array 
+
+            // adding the link to the image array
             modifyImages[counter] = document.getElementById(inputText).value
             counter++
         }
     }
-    // i = the amount of examples 
-    // j = the amount of images 
-    // counter = index of images in image array 
-    // j != counter bc 
+    
+    // i = the amount of examples
+    // j = the amount of images
+    // counter = index of images in image array
+    // j != counter bc
     // once the j loop finishes and goes back for another i loop, j resets and would overwrite an image
 
     // actually modifiying the data
     json.goal.targets.forEach(target => {
         if (target.id === givenId) {
 
-            // modifying number and description 
+            // modifying number and description
             target.number = number
             target.description = description
 
             // go through the array modifyTitle and change the title at the example index to the modifyTitle at the same index
-            // so title 1 (index 0) for example 1 (index 0) 
+            // so title 1 (index 0) for example 1 (index 0)
             for (let i = 0; i < modifyTitles.length; i++) {
                 target.examples[i].title = modifyTitles[i]
             }
 
             // go through the array modifyDescription and change the description at the example index to the modifyDescription at the same index
-            // so description 1 (index 0) for example 1 (index 0) 
+            // so description 1 (index 0) for example 1 (index 0)
             for (let i = 0; i < modifyDescriptions.length; i++) {
                 target.examples[i].description = modifyDescriptions[i]
             }
 
-            // setting counters for the example and image array indexes 
+            // setting counters for the example and image array indexes
             let exampleIndex = 0
             let imageIndex = 0
 
-            // doesn't really matter which example we use 
+            // doesn't really matter which example we use
             if (target.examples[0].images.length !== 1) {
 
-                // loop for length not being 1 
+                // loop for length not being 1
                 for (let i = 0; i < modifyImages.length; i++) {
 
                     // checking if i is halfway through the length
                     if ((modifyImages.length / 2) === i) {
 
-                        // increasing the exampleIndex to move on to the next example array 
-                        // resetting the imageIndex back to 0 so when we start modifying the new example array we start from the beginnning of the image array 
+                        // increasing the exampleIndex to move on to the next example array
+                        // resetting the imageIndex back to 0 so when we start modifying the new example array we start from the beginnning of the image array
                         exampleIndex++
                         imageIndex = 0
                     }
                     target.examples[exampleIndex].images[imageIndex] = modifyImages[i]
                     imageIndex++
                 }
-            } else {
-                // loop if length is 1 
+            } 
+            else {
+                // loop if length is 1
                 for (let i = 0; i < modifyImages.length; i++) {
                     target.examples[exampleIndex].images[imageIndex] = modifyImages[i]
                     exampleIndex++
@@ -482,8 +439,7 @@ function deleteData(id) {
     let selectedIndex
     json.goal.targets.forEach((target, index) =>
     {
-        if (target.id === id)
-        {
+        if (target.id === id){
             selectedIndex = index
         }
     })
@@ -506,8 +462,8 @@ function displayTagsManager() {
     // dynamically making the header
     let headerString = `<h1>Tags Manager </h1> <br>`
     document.getElementById("header").innerHTML = headerString
-    
-    // arrow changes whether ascending is true or not 
+
+    // arrow changes whether ascending is true or not
     let arrow = tagsSortAscendingOrder === true ? " ↑" : " ↓"
 
     // making the list to show the tags
@@ -525,7 +481,7 @@ function tagsSort() {
     tagsSortAscendingOrder = !tagsSortAscendingOrder
 
     if (tagsSortAscendingOrder) {
-        uniqueTags.sort((a,b) => {
+        uniqueTags.sort((a, b) => {
             // localeCompare() compares the 2 strings and returns -1, 0 or 1 depending on the order
             // so if a is b4 b, then = -1
             // if a = b, then = 0
@@ -534,7 +490,7 @@ function tagsSort() {
         })
     } 
     else {
-        uniqueTags.sort((a,b) => {
+        uniqueTags.sort((a, b) => {
             return b.toLowerCase().localeCompare(a.toLowerCase())
         })
     }
@@ -561,7 +517,7 @@ function showTagsAddForm() {
 // adding code initially taken from derek.comp: https://derek.comp.dkit.ie/
 function addTagsData() {
     let newTag = document.getElementById("newTag").value
-    
+
     uniqueTags.push(newTag)
 
     displayTagsManager()
@@ -571,11 +527,11 @@ function showModifyTagsForm(chosenTag) {
     // hiding the header and buttons
     document.getElementById("header").style.display = "none"
     document.getElementById("menu").style.display = "none"
-    
+
     // getting the index of the chosenTag
     // indexOf found on w3schools: https://www.w3schools.com/jsref/jsref_indexof_array.asp
     let index = uniqueTags.indexOf(chosenTag);
-    
+
     // creating the for Modify Form
     htmlString = `<h4>Modify Tag</h4>
                 <label>Tag: </label><input type="text" id="modifiedTag" value="${chosenTag}"><br>
@@ -590,7 +546,7 @@ function showModifyTagsForm(chosenTag) {
 function modifyTagsData(index) {
     // getting the modified tag value
     let modifiedTag = document.getElementById("modifiedTag").value
-    // adding to the uniqueTags array 
+    // adding to the uniqueTags array
     uniqueTags[index] = modifiedTag
     displayTagsManager()
 }
@@ -615,4 +571,169 @@ function deleteTagsData(chosenTag) {
 
 function closeDeleteTagsModal() {
     document.getElementById('deleteModal').close()
+}
+
+function isNumberValid()
+{
+    let errorMessage = ""
+    // test to see if the name is not empty
+    if (document.getElementById("number").value.length === 0 || isNaN(document.getElementById("number").value)) {
+        errorMessage += "Please enter a number"
+    }
+
+    // passed all tests, so it is a valid name
+    document.getElementById("numberErrorMessage").innerHTML = errorMessage
+    return (errorMessage.length === 0)
+}
+
+function isDescriptionValid()
+{
+    let errorMessage = ""
+    // test to see if the name is not empty
+    if (document.getElementById("description").value.length === 0) {
+        errorMessage += "Please enter a description"
+    }
+
+    // passed all tests, so it is a valid name
+    document.getElementById("descriptionErrorMessage").innerHTML = errorMessage
+    return (errorMessage.length === 0)
+}
+
+function isExample1TitleValid()
+{
+    let errorMessage = ""
+    // test to see if the name is not empty
+    if (document.getElementById("example1Title").value.length === 0) {
+        errorMessage += "Please enter a title for this example"
+    }
+
+    // passed all tests, so it is a valid name
+    document.getElementById("example1TitleErrorMessage").innerHTML = errorMessage
+    return (errorMessage.length === 0)
+}
+
+function isExample1DescriptionValid()
+{
+    let errorMessage = ""
+    // test to see if the name is not empty
+    if (document.getElementById("example1Description").value.length === 0) {
+        errorMessage += "Please enter a description for this example"
+    }
+
+    // passed all tests, so it is a valid name
+    document.getElementById("example1DescriptionErrorMessage").innerHTML = errorMessage
+    return (errorMessage.length === 0)
+}
+
+function isExample1ImageValid()
+{
+    let errorMessage = ""
+    // test to see if the name is not empty
+    if (document.getElementById("example1Image").value.length === 0) {
+        errorMessage += "Please enter a valid image link"
+    }
+
+    // passed all tests, so it is a valid name
+    document.getElementById("example1ImageErrorMessage").innerHTML = errorMessage
+    return (errorMessage.length === 0)
+}
+
+function isExample1TagValid()
+{
+    let errorMessage = ""
+    // getting the inputted tag
+    let inputTag = document.getElementById("example1Tag").value
+    // creating an array with only the ipnutted tag if it is already in the uniqueTags array
+    let isTagThere = uniqueTags.filter(tag => tag.localeCompare(inputTag) === 0)
+    //test to see if the isTagThere array is empty 
+    // if it is empty, the tag isnt there
+    if (isTagThere.length === 0) {
+        errorMessage += "Please enter a valid tag"
+    }
+    // passed all tests, so it is a valid tag
+    document.getElementById("example1TagErrorMessage").innerHTML = errorMessage
+    return (errorMessage.length === 0)
+}
+
+function isExample2TitleValid()
+{
+    let errorMessage = ""
+    // test to see if the name is not empty
+    if (document.getElementById("example2Title").value.length === 0) {
+        errorMessage += "Please enter a title for this example"
+    }
+
+    // passed all tests, so it is a valid name
+    document.getElementById("example2TitleErrorMessage").innerHTML = errorMessage
+    return (errorMessage.length === 0)
+}
+
+function isExample2DescriptionValid()
+{
+    let errorMessage = ""
+    // test to see if the name is not empty
+    if (document.getElementById("example2Description").value.length === 0) {
+        errorMessage += "Please enter a description for this example"
+    }
+
+    // passed all tests, so it is a valid name
+    document.getElementById("example2DescriptionErrorMessage").innerHTML = errorMessage
+    return (errorMessage.length === 0)
+}
+
+function isExample2ImageValid()
+{
+    let errorMessage = ""
+    let image = document.getElementById("example2Image").value
+    // test to see if the name is not empty
+    if ((image.length === 0) || (!image.includes("http"))) {
+        errorMessage += "Please enter a valid image link"
+    }
+    // passed all tests, so it is a valid name
+    document.getElementById("example2ImageErrorMessage").innerHTML = errorMessage
+    return (errorMessage.length === 0)
+}
+
+function isExample2TagValid()
+{
+    let errorMessage = ""
+    // getting the inputted tag
+    let inputTag = document.getElementById("example2Tag").value
+    // creating an array with only the ipnutted tag if it is already in the uniqueTags array
+    let isTagThere = uniqueTags.filter(tag => tag.localeCompare(inputTag) === 0)
+    //test to see if the isTagThere array is empty
+    // if it is empty, the tag isn't there
+    if (isTagThere.length === 0) {
+        errorMessage += "Please enter a valid tag"
+    }
+    // passed all tests, so it is a valid tag
+    document.getElementById("example2TagErrorMessage").innerHTML = errorMessage
+    return (errorMessage.length === 0)
+}
+
+function isFormValid()
+{
+    /* Validate all of the input elements */
+    let numberIsValid = isNumberValid()
+    let descriptionIsValid = isDescriptionValid()
+
+    let example1Title = isExample1TitleValid()
+    let example1Description = isExample1DescriptionValid()
+    let example1Image = isExample1ImageValid()
+    let example1Tag = isExample1TagValid()
+
+    let example2Title = isExample2TitleValid()
+    let example2Description = isExample2DescriptionValid()
+    let example2Image = isExample2ImageValid()
+    let example2Tag = isExample2TagValid()
+
+    /* If ALL of the element validation functions pass, then the form is valid */
+    if (numberIsValid && descriptionIsValid && example1Title && example1Description && example1Image && example1Tag && example2Title && example2Description && example2Image && example2Tag) {
+        addData()
+        return true
+    }
+    /* If ANY of the element validation functions fail, then the form fails */
+    else {
+        return false
+    }
 }
