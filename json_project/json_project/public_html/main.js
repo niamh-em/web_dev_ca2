@@ -217,13 +217,11 @@ function showAddForm() {
                 <label>Description</label><input type="text" id="example1Description" placeholder="Description"><br>
                 <label>Image </label><input type="text" id="example1Image" placeholder="image link" oninput="showImage1()"><br>
                 <div id="showExample1Image"></div><br>
-                <label>Tags: </label><input type="text" id="example1Tag1" placeholder="Tag"><br>
                 <br><label>Example 2:</label><br>
                 <label>Title: </label><input type="text" id="example2Title" placeholder="Title"><br>
                 <label>Description</label><input type="text" id="example2Description" placeholder="Description"><br>
                 <label>Image </label><input type="text" id="example2Image" placeholder="image link" oninput="showImage2()"><br>
-                <div id="showExample2Image" ></div><br>
-                <label>Tags: </label><input type="text" id="example2Tag1" placeholder="Tag"><br>`
+                <div id="showExample2Image" ></div><br>`
 
     htmlString += `<br>
                 <input type="button" value="Cancel" onclick="displayTable()"/>
@@ -242,17 +240,51 @@ function addData() {
     let title1 = document.getElementById("example1Title").value
     let description1 = document.getElementById("example1Description").value
     let image1 = document.getElementById("example1Image").value
-    let tag1 = document.getElementById("example1Tag1").value
 
     // example 2 
     let title2 = document.getElementById("example2Title").value
     let description2 = document.getElementById("example2Description").value
     let image2 = document.getElementById("example2Image").value
-    let tag2 = document.getElementById("example2Tag1").value
+    
+    // error checking --
+    if (number === "" || description === "") {
+        alert("Please enter a number and description")
+        return
+    }
+    // checks if its not a number
+    if (isNaN(number)) {
+        alert("Number must be a valid number")
+        return
+    }
+    // checks if its a blank field
+    if (title1 === "" || description1 === "") {
+        alert("Example 1 needs a title and description")
+        return
+    }
+    // checks if its a blank field (for desc 2)
+    if (title2 === "" || description2 === "") {
+        alert("Example 2 needs a title and description")
+        return
+    }
+    // checks if the link fields are empty
+    if (image1 === "" || image2 === "") {
+        alert("Please enter image links")
+        return
+    }
+    // checks if the link doesnt include http
+    if (!image1.includes("http")) {
+        alert("Image must be a valid link.")
+        return
+    }
+    // checks if the link doesnt include http (for image 2)
+    if (!image2.includes("http")) {
+        alert("Image must be a valid link.")
+        return
+    }
 
     // making examples to add to the newData which will be added to the json
-    let example1Array = {title: title1, description: description1, images: [image1], tags: [tag1]}
-    let example2Array = {title: title2, description: description2, images: [image2], tags: [tag2]}
+    let example1Array = {title: title1, description: description1, images: [image1], tags: []}
+    let example2Array = {title: title2, description: description2, images: [image2], tags: []}
 
     // making the array to add to json
     let newData = {id: uniqueId, number: number, description: description, examples: [example1Array, example2Array]}
@@ -325,8 +357,19 @@ function modifyData(givenId) {
     // getting the number and description values
     let number = document.getElementById("number").value
     let description = document.getElementById("description").value
+    
+      // error checking for number and description
+    if(number === "" || description === ""){
+        alert("Number and description cannot be empty")
+        return
+    }
 
-    // establishing exampleDisplay
+    if(isNaN(number)){
+        alert("Number must be a valid number")
+        return
+    }
+
+        // establishing exampleDisplay
     let exampleDisplay = json.goal.targets.find(target => target.id === givenId)
 
     // counter to make sure no image in the array of images gets overwritten  
@@ -349,6 +392,18 @@ function modifyData(givenId) {
             // creating ids for the images 
             imgText = "example" + i + "Image" + j
             inputText = "example" + i + "Input" + j
+            
+            // error checking
+             if(imgText === "" || inputText === ""){
+            alert("Example titles and descriptions cannot be empty")
+            return
+            }
+            
+            if (!imgText.includes("http")) {
+                alert("Image links cannot be empty")
+                return
+            }
+            
             // adding the link to the image array 
             modifyImages[counter] = document.getElementById(inputText).value
             counter++
@@ -479,8 +534,6 @@ function tagsSort() {
         })
     } 
     else {
-        // leaving the number key as a string because i could not figure out/ find out how to sort doubles in javascript
-        // and it still works if it is a string
         uniqueTags.sort((a,b) => {
             return b.toLowerCase().localeCompare(a.toLowerCase())
         })
