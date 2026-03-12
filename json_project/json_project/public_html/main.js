@@ -467,7 +467,7 @@ function displayTagsManager() {
     let arrow = tagsSortAscendingOrder === true ? " ↑" : " ↓"
 
     // making the list to show the tags
-    htmlString = `<table><thead><tr><th onclick="tagsSort()">Tags ${arrow}</th><th></th><th></th></tr></thead><tbody>`
+    htmlString = `<table><thead><tr id="headingRow"><th onclick="tagsSort()">Tags ${arrow}</th><th></th><th></th></tr></thead><tbody>`
     uniqueTags.forEach(tag => {
         htmlString += `<tr><td>${tag}</td><td><input type="button" value="Modify" onclick="showModifyTagsForm('${tag}')"/></td><td><input type="button" value="Delete" onclick="deleteTagsModal('${tag}')"/></td></tr>`
     })
